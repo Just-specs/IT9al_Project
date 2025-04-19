@@ -90,6 +90,8 @@ Route::middleware('auth')->group(function () {
         Route::post('receive/{id}', 'receiveOrder')->name('purchase-orders.receive');
     });
 
+    Route::resource('purchase_orders', PurchaseOrderController::class);
+
     // Inventory Issue Routes
     Route::controller(InventoryIssueController::class)->prefix('inventory-issues')->group(function () {
         Route::get('', 'index')->name('inventory-issues');

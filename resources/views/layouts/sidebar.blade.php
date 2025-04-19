@@ -5,7 +5,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="fa-light fa-computer"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Justin <sup>2</sup></div>
+        <div class="sidebar-brand-text mx-3">DayTech <sup>computer parts</sup></div>
     </a>
 
     <!-- Divider -->
@@ -34,6 +34,13 @@
         <a class="nav-link" href="/profile">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Profile</span></a>
+    </li>
+
+    <!-- Nav Item - Purchase Orders -->
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('purchase-orders') }}">
+            <i class="fas fa-fw fa-file-invoice"></i>
+            <span>Purchase Orders</span></a>
     </li>
 
     <!-- Divider -->

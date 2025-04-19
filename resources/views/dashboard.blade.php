@@ -74,6 +74,23 @@
             </div>
         </div>
     </div>
+
+    <!-- Total Purchase Orders -->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total Purchase Orders</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $totalPurchaseOrders }}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-file-invoice fa-2x text-gray-300"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="row">
@@ -178,16 +195,16 @@
     // Item Status Distribution Chart
     document.addEventListener('DOMContentLoaded', function() {
         const statusData = @json($itemsByStatus);
-        
+
         const labels = statusData.map(item => item.status.charAt(0).toUpperCase() + item.status.slice(1));
         const data = statusData.map(item => item.total);
         const backgroundColor = [
             '#4e73df', // available - blue
             '#1cc88a', // assigned - green
             '#f6c23e', // maintenance - yellow
-            '#e74a3b'  // retired - red
+            '#e74a3b' // retired - red
         ];
-        
+
         const ctx = document.getElementById('itemStatusChart').getContext('2d');
         new Chart(ctx, {
             type: 'doughnut',
