@@ -66,13 +66,7 @@
         </div>
     </div>
     <div class="row mb-3">
-        <div class="col-md-6">
-            <label class="form-label">Serial Number (Optional)</label>
-            <input type="text" name="serial_number" class="form-control @error('serial_number') is-invalid @enderror" value="{{ old('serial_number', $product->serial_number) }}">
-            @error('serial_number')
-            <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
+
         <div class="col-md-6">
             <label class="form-label">Status</label>
             <select name="status" class="form-control @error('status') is-invalid @enderror">
@@ -96,13 +90,7 @@
         </div>
     </div>
     <div class="row mb-3">
-        <div class="col-md-12">
-            <label class="form-label">Specifications (Optional)</label>
-            <textarea name="specifications" class="form-control @error('specifications') is-invalid @enderror" rows="3">{{ old('specifications', $product->specifications) }}</textarea>
-            @error('specifications')
-            <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
+
     </div>
     <div class="row">
         <div class="d-grid">
