@@ -22,6 +22,9 @@
     <!-- Custom styles for this template-->
 
     <link href="{{ asset('admin_assets/css/sb-admin-2.min.css') }}" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="{{ asset('admin_assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
 </head>
 
 <body id="page-top">
