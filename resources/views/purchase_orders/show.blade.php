@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-@section('title', 'Purchase Order Details')
-
 @section('contents')
 <h1>Purchase Order Details</h1>
 <hr />

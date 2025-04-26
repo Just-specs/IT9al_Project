@@ -44,6 +44,7 @@
                     <div class="card o-hidden border-0 shadow-lg">
                         <div class="card-body p-4">
                             <div class="text-center mb-4">
+                                <img src="{{ asset('image/logo.png') }}" alt="Logo" style="width: 150px; height: auto;" class="mb-3"> <!-- Increased logo size -->
                                 <h1 class="h4 text-white-900" style="color: white;">Welcome Back!</h1>
                             </div>
                             <form action="{{ route('login.action') }}" method="POST" class="user">
