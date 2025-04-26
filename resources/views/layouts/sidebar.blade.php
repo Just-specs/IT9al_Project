@@ -20,13 +20,13 @@
 
     <li class="nav-item">
         <a class="nav-link" href="{{ route('products') }}">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <i class="fas fa-box-open"></i>
             <span>Product</span></a>
     </li>
 
     <li class="nav-item">
         <a class="nav-link" href="{{ route('suppliers') }}">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <i class="fas fa-truck"></i>
             <span>Supplier</span></a>
     </li>
 
