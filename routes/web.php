@@ -11,6 +11,7 @@ use App\Http\Controllers\InventoryIssueController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\StockController;
 
 
 Route::get('/', function () {
@@ -102,6 +103,17 @@ Route::middleware('auth')->group(function () {
         Route::get('show/{id}', 'show')->name('inventory-issues.show');
     });
 
+    // Stock Routes
+    Route::controller(StockController::class)->prefix('stock')->group(function () {
+        Route::get('', 'index')->name('stock'); // Ensure the "index" method in StockController passes $stocks
+        Route::get('create', 'create')->name('stock.create');
+        Route::post('store', 'store')->name('stock.store');
+        Route::get('show/{id}', 'show')->name('stock.show');
+        Route::get('edit/{id}', 'edit')->name('stock.edit');
+        Route::put('edit/{id}', 'update')->name('stock.update');
+        Route::delete('destroy/{id}', 'destroy')->name('stock.destroy');
+    });
+
     // Reports Routes
     Route::controller(ReportController::class)->prefix('reports')->group(function () {
         Route::get('', 'index')->name('reports');
@@ -116,3 +128,6 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::post('/items/{id}/upload-image', [ItemController::class, 'uploadImage'])->name('items.uploadImage');
+
+Route::get('/stock-in', [StockController::class, 'index'])->name('stock.index');
+Route::post('/stock-in', [StockController::class, 'store'])->name('stock.store');

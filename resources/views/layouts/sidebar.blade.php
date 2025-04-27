@@ -37,6 +37,12 @@
             <span>Purchase Orders</span></a>
     </li>
 
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('stock') }}">
+            <i class="fas fa-warehouse"></i>
+            <span>Stock</span></a>
+    </li>
+
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
 

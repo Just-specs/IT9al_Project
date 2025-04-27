@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-@section('title', 'Add New Supplier')
-
 @section('contents')
 <h1 class="mb-0">Add New Supplier</h1>
 <hr />
