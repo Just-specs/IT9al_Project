@@ -38,11 +38,11 @@
             }
 
             66% {
-                background: url("{{ asset('image/bg4.jpeg') }}") no-repeat center center / cover;
+                background: url("{{ asset('image/bg4.png') }}") no-repeat center center / cover;
             }
 
             100% {
-                background: url("{{ asset('image/bg.jpeg') }}") no-repeat center center / cover;
+                background: url("{{ asset('image/bg5.jpg') }}") no-repeat center center / cover;
             }
         }
 
