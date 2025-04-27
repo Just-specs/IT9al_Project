@@ -41,9 +41,14 @@
                 background: url("{{ asset('image/bg4.png') }}") no-repeat center center / cover;
             }
 
-            100% {
+            85% {
                 background: url("{{ asset('image/bg5.jpg') }}") no-repeat center center / cover;
             }
+
+            100% {
+                background: url("{{ asset('image/bg3.jpeg') }}") no-repeat center center / cover;
+            }
+
         }
 
         .card {
