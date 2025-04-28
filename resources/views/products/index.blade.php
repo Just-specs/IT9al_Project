@@ -3,7 +3,6 @@
 @section('contents')
 <div class="d-flex align-items-center justify-content-between">
     <h1 class="mb-0">Computer Parts Inventory</h1>
-    <a href="{{ route('products.create') }}" class="btn btn-primary">Add New Item</a>
 </div>
 <hr />
 @if(Session::has('success'))
@@ -18,10 +17,8 @@
             <th>Name</th>
             <th>Type</th>
             <th>Quantity</th>
-            <th>Min Stock</th>
             <th>Status</th>
             <th>Supplier</th>
-            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -32,7 +29,6 @@
             <td class="align-middle">{{ $product->name }}</td>
             <td class="align-middle">{{ $product->type }}</td>
             <td class="align-middle">{{ $product->quantity }}</td>
-            <td class="align-middle">{{ $product->min_stock_level }}</td>
             <td class="align-middle">
                 @if($product->status == 'available')
                 <span class="badge bg-success">Available</span>
@@ -45,22 +41,11 @@
                 @endif
             </td>
             <td class="align-middle">{{ $product->supplier->name ?? 'N/A' }}</td>
-            <td class="align-middle">
-                <div class="btn-group" role="group">
-                    <a href="{{ route('products.show', $product->id) }}" class="btn btn-secondary">Details</a>
-                    <a href="{{ route('products.edit', $product->id)}}" class="btn btn-warning">Edit</a>
-                    <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="btn btn-danger p-0" onsubmit="return confirm('Are you sure you want to delete this item?')">
-                        @csrf
-                        @method('DELETE')
-                        <button class="btn btn-danger m-0">Delete</button>
-                    </form>
-                </div>
-            </td>
         </tr>
         @endforeach
         @else
         <tr>
-            <td class="text-center" colspan="9">No products found</td>
+            <td class="text-center" colspan="6">No products found</td>
         </tr>
         @endif
     </tbody>

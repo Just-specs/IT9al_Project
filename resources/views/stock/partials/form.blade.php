@@ -10,7 +10,12 @@
     </div>
     <div class="form-group">
         <label for="supplier">Supplier</label>
-        <input type="text" name="supplier" id="supplier" class="form-control" placeholder="Enter supplier name" required>
+        <select name="supplier" id="supplier" class="form-control" required>
+            <option value="" disabled selected>Select a supplier</option>
+            @foreach($suppliers as $supplier)
+            <option value="{{ $supplier->name }}">{{ $supplier->name }}</option>
+            @endforeach
+        </select>
     </div>
     <button type="submit" class="btn btn-primary">Add Stock</button>
 </form>

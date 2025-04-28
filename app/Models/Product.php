@@ -18,7 +18,7 @@ class Product extends Model
         'supplier_id',
         'serial_number',
         'specifications',
-        'status'
+        'status',
     ];
 
     // Define relationships

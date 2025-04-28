@@ -127,7 +127,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [App\Http\Controllers\AuthController::class, 'profile'])->name('profile');
 });
 
-Route::post('/items/{id}/upload-image', [ItemController::class, 'uploadImage'])->name('items.uploadImage');
+// Stock Routes
 
 Route::get('/stock-in', [StockController::class, 'index'])->name('stock.index');
 Route::post('/stock-in', [StockController::class, 'store'])->name('stock.store');
