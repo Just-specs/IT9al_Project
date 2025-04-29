@@ -12,6 +12,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\StockController;
+use App\Http\Controllers\SearchController;
 
 
 Route::get('/', function () {
@@ -131,3 +132,5 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/stock-in', [StockController::class, 'index'])->name('stock.index');
 Route::post('/stock-in', [StockController::class, 'store'])->name('stock.store');
+
+Route::get('/search', [SearchController::class, 'index'])->name('search');

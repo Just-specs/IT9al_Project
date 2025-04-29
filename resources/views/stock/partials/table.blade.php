@@ -1,6 +1,5 @@
-<h2 class="text-center">Stock List</h2>
-<table class="table table-bordered">
-    <thead>
+<table class="table table-hover">
+    <thead class="table-primary">
         <tr>
             <th>#</th>
             <th>Product Name</th>
@@ -10,14 +9,15 @@
         </tr>
     </thead>
     <tbody>
+        @if($stocks->count() > 0)
         @foreach($stocks as $stock)
         <tr>
-            <td>{{ $loop->iteration }}</td>
-            <td>{{ $stock->product_name }}</td>
-            <td>{{ $stock->quantity }}</td>
-            <td>{{ $stock->supplier }}</td>
-            <td>
-                <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#editModal{{ $stock->id }}">Edit</button>
+            <td class="align-middle">{{ $loop->iteration }}</td>
+            <td class="align-middle">{{ $stock->product_name }}</td>
+            <td class="align-middle">{{ $stock->quantity }}</td>
+            <td class="align-middle">{{ $stock->supplier }}</td>
+            <td class="align-middle">
+                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ $stock->id }}">Edit</button>
                 <form action="{{ route('stock.destroy', $stock->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this stock?');">
                     @csrf
                     @method('DELETE')
@@ -27,5 +27,10 @@
         </tr>
         @include('stock.partials.edit-modal', ['stock' => $stock])
         @endforeach
+        @else
+        <tr>
+            <td class="text-center" colspan="5">No stock records found</td>
+        </tr>
+        @endif
     </tbody>
 </table>

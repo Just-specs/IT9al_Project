@@ -82,8 +82,7 @@ class StockController extends Controller
                 $product->delete();
             }
         }
-
-        $stock->delete(); // Delete the stock record
+        $stock->delete();
 
         return redirect()->route('stock.index')->with('success', 'Stock and corresponding product updated successfully!');
     }
