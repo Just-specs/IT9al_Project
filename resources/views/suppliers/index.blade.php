@@ -4,7 +4,7 @@
 <div class="d-flex align-items-center justify-content-between">
     <h1 class="mb-0">Suppliers</h1>
     <!-- Button trigger modal -->
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addSupplierModal">
+    <button type="button" class="btn btn-primary" onclick="$('#addSupplierModal').modal('show')">
         Add New Supplier
     </button>
 </div>
