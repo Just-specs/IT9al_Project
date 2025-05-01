@@ -3,7 +3,10 @@
 @section('contents')
 <div class="d-flex align-items-center justify-content-between">
     <h1 class="mb-0">Purchase Orders</h1>
-    <a href="{{ route('purchase_orders.create') }}" class="btn btn-primary">Create Purchase Order</a>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" onclick="$('#createPurchaseOrderModal').modal('show')">
+        Create Purchase Order
+    </button>
 </div>
 <hr />
 @if(Session::has('success'))
@@ -11,6 +14,8 @@
     {{ Session::get('success') }}
 </div>
 @endif
+
+<!-- Purchase Orders Table -->
 <table class="table table-hover">
     <thead class="table-primary">
         <tr>
@@ -59,4 +64,54 @@
         @endif
     </tbody>
 </table>
+
+<!-- Create Purchase Order Modal -->
+<div class="modal fade" id="createPurchaseOrderModal" tabindex="-1" aria-labelledby="createPurchaseOrderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createPurchaseOrderModalLabel">Create Purchase Order</h5>
+                <button type="button" class="btn btn-light border-0" onclick="$('#createPurchaseOrderModal').modal('hide')" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form action="{{ route('purchase-orders.store') }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="product_name" class="form-label">Product Name</label>
+                        <input type="text" class="form-control" id="product_name" name="product_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label">Quantity</label>
+                        <input type="number" class="form-control" id="quantity" name="quantity" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="supplier_id" class="form-label">Supplier</label>
+                        <select class="form-control" id="supplier_id" name="supplier_id" required>
+                            <option value="" disabled selected>Select Supplier</option>
+                            @foreach($suppliers as $supplier)
+                            <option value="{{ $supplier->id }}">{{ $supplier->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="status" class="form-label">Status</label>
+                        <select class="form-control" id="status" name="status" required>
+                            <option value="pending">Pending</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Include Bootstrap JS -->
+<script src="{{ asset('admin_assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 @endsection

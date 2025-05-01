@@ -81,7 +81,6 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-warning">Update</button>
                         </div>
                     </form>
@@ -103,7 +102,9 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addSupplierModalLabel">Add New Supplier</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn btn-light border-0" onclick="$('#addSupplierModal').modal('hide')" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <form action="{{ route('suppliers.store') }}" method="POST">
                 @csrf
@@ -122,7 +123,6 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="$('#addSupplierModal').modal('hide')">Close</button>
                     <button type="submit" class="btn btn-primary">Save</button>
                 </div>
             </form>

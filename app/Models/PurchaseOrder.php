@@ -12,7 +12,7 @@ class PurchaseOrder extends Model
     protected $fillable = [
         'supplier_id',
         'total_amount',
-        'status'
+        'status',
     ];
 
     public function supplier()

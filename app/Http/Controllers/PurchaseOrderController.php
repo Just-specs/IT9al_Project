@@ -17,7 +17,8 @@ class PurchaseOrderController extends Controller
     public function index()
     {
         $purchaseOrders = PurchaseOrder::with('supplier')->get(); // Fetch purchase orders with supplier data
-        return view('purchase_orders.index', compact('purchaseOrders')); // Return the correct view
+        $suppliers = Supplier::all(); // Fetch all suppliers
+        return view('purchase_orders.index', compact('purchaseOrders', 'suppliers')); // Pass $suppliers to the view
     }
 
     public function create()
@@ -32,16 +33,15 @@ class PurchaseOrderController extends Controller
             'supplier_id' => 'required|exists:suppliers,id',
             'product_name' => 'required|string|max:255',
             'quantity' => 'required|integer|min:1',
-            'status' => 'required|in:pending,completed,cancelled',
+            'status' => 'required|in:pending,completed,cancelled', // Validate against valid enum values
         ]);
 
-        // Create a new purchase order
-        $purchaseOrder = PurchaseOrder::create([
+        PurchaseOrder::create([
             'supplier_id' => $validatedData['supplier_id'],
-            'total_amount' => 0, // Default value, can be updated later
+            'total_amount' => 0, // Default value
             'status' => $validatedData['status'], // Ensure status is properly quoted
         ]);
 
-        return redirect()->route('purchase-orders')->with('success', 'Purchase order created successfully.');
+        return redirect()->route('purchase_orders.index')->with('success', 'Purchase order created successfully!');
     }
 }
