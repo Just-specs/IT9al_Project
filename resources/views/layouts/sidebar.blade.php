@@ -51,5 +51,9 @@
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
     </div>
 
+    <!-- Logo -->
+    <div class="text-center mt-5">
+        <img src="{{ asset('image/logo.png') }}" alt="Logo" class="img-fluid" style="max-width: 80%;">
+    </div>
 
 </ul>

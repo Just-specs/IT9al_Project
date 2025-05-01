@@ -1,26 +1,29 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Purchase Order')
-
 @section('contents')
-<h1>Edit Purchase Order</h1>
+<div class="d-flex align-items-center justify-content-between">
+    <h1 class="mb-0">Edit Purchase Order</h1>
+    <a href="{{ route('purchase_orders.index') }}" class="btn btn-secondary">Back</a>
+</div>
 <hr />
-<form action="{{ route('purchase_orders.update', $purchaseOrder->id) }}" method="POST">
+<form action="{{ route('purchase-orders.update', $purchaseOrder->id) }}" method="POST">
     @csrf
     @method('PUT')
     <div class="mb-3">
         <label for="product_name" class="form-label">Product Name</label>
-        <input type="text" class="form-control" id="product_name" name="product_name" value="{{ $purchaseOrder->product_name }}" required>
+        <input type="text" class="form-control" id="product_name" name="product_name" value="{{ old('product_name', $purchaseOrder->product_name) }}" required>
     </div>
     <div class="mb-3">
         <label for="quantity" class="form-label">Quantity</label>
-        <input type="number" class="form-control" id="quantity" name="quantity" value="{{ $purchaseOrder->quantity }}" required>
+        <input type="number" class="form-control" id="quantity" name="quantity" value="{{ old('quantity', $purchaseOrder->quantity) }}" required>
     </div>
     <div class="mb-3">
         <label for="supplier_id" class="form-label">Supplier</label>
         <select class="form-control" id="supplier_id" name="supplier_id" required>
             @foreach($suppliers as $supplier)
-            <option value="{{ $supplier->id }}" {{ $supplier->id == $purchaseOrder->supplier_id ? 'selected' : '' }}>{{ $supplier->name }}</option>
+            <option value="{{ $supplier->id }}" {{ $supplier->id == $purchaseOrder->supplier_id ? 'selected' : '' }}>
+                {{ $supplier->name }}
+            </option>
             @endforeach
         </select>
     </div>
@@ -32,6 +35,6 @@
             <option value="cancelled" {{ $purchaseOrder->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
         </select>
     </div>
-    <button type="submit" class="btn btn-primary">Update</button>
+    <button type="submit" class="btn btn-warning">Update</button>
 </form>
 @endsection

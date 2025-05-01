@@ -11,14 +11,14 @@ use App\Models\PurchaseOrder;
 use App\Models\Activity;
 use Illuminate\Support\Facades\DB;
 
-
 class PurchaseOrderController extends Controller
 {
     public function index()
     {
         $purchaseOrders = PurchaseOrder::with('supplier')->get(); // Fetch purchase orders with supplier data
         $suppliers = Supplier::all(); // Fetch all suppliers
-        return view('purchase_orders.index', compact('purchaseOrders', 'suppliers')); // Pass $suppliers to the view
+        $products = Product::all(); // Fetch all products
+        return view('purchase_orders.index', compact('purchaseOrders', 'suppliers', 'products')); // Pass $products to the view
     }
 
     public function create()
@@ -36,6 +36,15 @@ class PurchaseOrderController extends Controller
             'status' => 'required|in:pending,completed,cancelled', // Validate against valid enum values
         ]);
 
+        // Deduct the purchased quantity from the product's stock
+        $product = Product::where('name', $validatedData['product_name'])->first();
+        if ($product) {
+            if ($product->quantity < $validatedData['quantity']) {
+                return redirect()->back()->withErrors(['quantity' => 'Not enough stock available for this product.']);
+            }
+            $product->decrement('quantity', $validatedData['quantity']);
+        }
+
         PurchaseOrder::create([
             'supplier_id' => $validatedData['supplier_id'],
             'total_amount' => 0, // Default value
@@ -43,5 +52,35 @@ class PurchaseOrderController extends Controller
         ]);
 
         return redirect()->route('purchase_orders.index')->with('success', 'Purchase order created successfully!');
+    }
+
+    public function edit($id)
+    {
+        $purchaseOrder = PurchaseOrder::findOrFail($id); // Find the purchase order by ID
+        $suppliers = Supplier::all(); // Fetch all suppliers for the dropdown
+        return view('purchase_orders.edit', compact('purchaseOrder', 'suppliers')); // Pass data to the view
+    }
+
+    public function update(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'supplier_id' => 'required|exists:suppliers,id',
+            'product_name' => 'required|string|max:255',
+            'quantity' => 'required|integer|min:1',
+            'status' => 'required|in:pending,completed,cancelled', // Validate against valid enum values
+        ]);
+
+        $purchaseOrder = PurchaseOrder::findOrFail($id); // Find the purchase order by ID
+        $purchaseOrder->update($validatedData); // Update the purchase order with validated data
+
+        return redirect()->route('purchase_orders.index')->with('success', 'Purchase order updated successfully!');
+    }
+
+    public function destroy($id)
+    {
+        $purchaseOrder = PurchaseOrder::findOrFail($id); // Find the purchase order by ID
+        $purchaseOrder->delete(); // Delete the purchase order
+
+        return redirect()->route('purchase_orders.index')->with('success', 'Purchase order deleted successfully!');
     }
 }

@@ -17,7 +17,6 @@
             <td class="align-middle">{{ $stock->quantity }}</td>
             <td class="align-middle">{{ $stock->supplier }}</td>
             <td class="align-middle">
-                <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#editModal{{ $stock->id }}">Edit</button>
                 <form action="{{ route('stock.destroy', $stock->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('Are you sure you want to delete this stock?');">
                     @csrf
                     @method('DELETE')

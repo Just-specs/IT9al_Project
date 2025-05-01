@@ -24,21 +24,19 @@
     <tbody>
         @if($products->count() > 0)
         @foreach($products as $product)
-        <tr class="{{ $product->quantity <= $product->min_stock_level ? 'table-danger' : '' }}">
+        <tr class="{{ $product->quantity == 0 ? 'table-danger' : ($product->quantity < 10 ? 'table-warning' : '') }}">
             <td class="align-middle">{{ $loop->iteration }}</td>
             <td class="align-middle">{{ $product->name }}</td>
             <td class="align-middle">{{ $product->type }}</td>
             <td class="align-middle">{{ $product->quantity }}</td>
             <td class="align-middle">
-                @if($product->status == 'available')
-                <span class="badge bg-success">Available</span>
-                @elseif($product->status == 'assigned')
-                <span class="badge bg-primary">Assigned</span>
-                @elseif($product->status == 'maintenance')
-                <span class="badge bg-warning">Maintenance</span>
-                @else
-                <span class="badge bg-danger">Retired</span>
-                @endif
+                @if($product->quantity == 0)
+                <span class="badge bg-danger">Out of Stock</span>
+                @elseif($product->quantity < 10)
+                    <span class="badge bg-warning">Low Stock</span>
+                    @else
+                    <span class="badge bg-success">Available</span>
+                    @endif
             </td>
             <td class="align-middle">{{ $product->supplier->name ?? 'N/A' }}</td>
         </tr>

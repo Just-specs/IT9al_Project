@@ -46,8 +46,6 @@
             </td>
             <td class="align-middle">
                 <div class="btn-group" role="group">
-                    <a href="{{ route('purchase_orders.show', $order->id) }}" class="btn btn-secondary">Details</a>
-                    <a href="{{ route('purchase_orders.edit', $order->id)}}" class="btn btn-warning">Edit</a>
                     <form action="{{ route('purchase_orders.destroy', $order->id) }}" method="POST" class="btn btn-danger p-0" onsubmit="return confirm('Are you sure you want to delete this order?')">
                         @csrf
                         @method('DELETE')
@@ -56,6 +54,54 @@
                 </div>
             </td>
         </tr>
+
+        <!-- Edit Purchase Order Modal -->
+        <div class="modal fade" id="editPurchaseOrderModal{{ $order->id }}" tabindex="-1" aria-labelledby="editPurchaseOrderModalLabel{{ $order->id }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editPurchaseOrderModalLabel{{ $order->id }}">Edit Purchase Order</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('purchase-orders.update', $order->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="product_name" class="form-label">Product Name</label>
+                                <input type="text" class="form-control" id="product_name" name="product_name" value="{{ old('product_name', $order->product_name) }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="quantity" class="form-label">Quantity</label>
+                                <input type="number" class="form-control" id="quantity" name="quantity" value="{{ old('quantity', $order->quantity) }}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="supplier_id" class="form-label">Supplier</label>
+                                <select class="form-control" id="supplier_id" name="supplier_id" required>
+                                    @foreach($suppliers as $supplier)
+                                    <option value="{{ $supplier->id }}" {{ $supplier->id == $order->supplier_id ? 'selected' : '' }}>
+                                        {{ $supplier->name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Status</label>
+                                <select class="form-control" id="status" name="status" required>
+                                    <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                    <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>Completed</option>
+                                    <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-warning">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
         @endforeach
         @else
         <tr>
@@ -80,7 +126,12 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="product_name" class="form-label">Product Name</label>
-                        <input type="text" class="form-control" id="product_name" name="product_name" required>
+                        <select class="form-control" id="product_name" name="product_name" required>
+                            <option value="" disabled selected>Select Product</option>
+                            @foreach($products as $product)
+                            <option value="{{ $product->name }}">{{ $product->name }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label for="quantity" class="form-label">Quantity</label>
