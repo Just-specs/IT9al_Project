@@ -11,14 +11,10 @@ class Product extends Model
 
     protected $fillable = [
         'name',
-        'description',
         'type',
         'quantity',
-        'min_stock_level',
+        'price_per_item',
         'supplier_id',
-        'serial_number',
-        'specifications',
-        'status',
     ];
 
     // Define relationships

@@ -22,7 +22,7 @@ class PurchaseOrder extends Model
 
     public function orderDetails()
     {
-        return $this->hasMany(OrderDetail::class);
+        return $this->hasMany(OrderDetail::class, 'purchase_order_id');
     }
 
     public function purchaseOrderReceivings()

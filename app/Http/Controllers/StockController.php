@@ -18,25 +18,39 @@ class StockController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'product_name' => 'required|string|max:255',
             'quantity' => 'required|integer|min:1',
+            'price_per_product' => 'required|numeric|min:0',
             'supplier' => 'required|string|max:255',
         ]);
 
-        // Add stock to the stocks table
-        $stock = Stock::create($request->all());
-
-        // Add the same stock to the products table
-        Product::create([
-            'name' => $stock->product_name,
-            'quantity' => $stock->quantity,
-            'supplier_id' => Supplier::where('name', $stock->supplier)->first()->id ?? null,
-            'description' => 'Added from stock', // Default description
-            'type' => 'General', // Default type
-            'min_stock_level' => 0, // Default minimum stock level
-            'status' => 'available', // Default status
+        // Add the stock entry
+        Stock::create([
+            'product_name' => $validatedData['product_name'],
+            'quantity' => $validatedData['quantity'],
+            'price_per_product' => $validatedData['price_per_product'],
+            'supplier' => $validatedData['supplier'],
         ]);
+
+        // Check if the product already exists in the products table
+        $product = Product::where('name', $validatedData['product_name'])->first();
+
+        if ($product) {
+            // Update the existing product's quantity and price
+            $product->increment('quantity', $validatedData['quantity']);
+            $product->price_per_item = $validatedData['price_per_product'];
+            $product->save();
+        } else {
+            // Create a new product entry
+            Product::create([
+                'name' => $validatedData['product_name'],
+                'type' => 'Unknown', // Default type, can be updated later
+                'quantity' => $validatedData['quantity'],
+                'price_per_item' => $validatedData['price_per_product'],
+                'supplier_id' => Supplier::where('name', $validatedData['supplier'])->first()->id ?? null,
+            ]);
+        }
 
         return redirect()->route('stock.index')->with('success', 'Stock added successfully and reflected in products!');
     }
