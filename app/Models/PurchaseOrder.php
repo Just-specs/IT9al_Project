@@ -29,4 +29,11 @@ class PurchaseOrder extends Model
     {
         return $this->hasMany(PurchaseOrderReceiving::class);
     }
+
+    public function calculateTotalAmount()
+    {
+        return $this->orderDetails->sum(function ($detail) {
+            return $detail->quantity * $detail->product->price_per_item;
+        });
+    }
 }

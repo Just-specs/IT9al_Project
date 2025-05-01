@@ -25,13 +25,25 @@ class StockController extends Controller
             'supplier' => 'required|string|max:255',
         ]);
 
-        // Add the stock entry
-        Stock::create([
-            'product_name' => $validatedData['product_name'],
-            'quantity' => $validatedData['quantity'],
-            'price_per_product' => $validatedData['price_per_product'],
-            'supplier' => $validatedData['supplier'],
-        ]);
+        // Check if the stock entry already exists for the same product
+        $stock = Stock::where('product_name', $validatedData['product_name'])
+            ->where('supplier', $validatedData['supplier'])
+            ->first();
+
+        if ($stock) {
+            // Update the existing stock entry
+            $stock->increment('quantity', $validatedData['quantity']);
+            $stock->price_per_product = $validatedData['price_per_product']; // Update price if needed
+            $stock->save();
+        } else {
+            // Create a new stock entry
+            Stock::create([
+                'product_name' => $validatedData['product_name'],
+                'quantity' => $validatedData['quantity'],
+                'price_per_product' => $validatedData['price_per_product'],
+                'supplier' => $validatedData['supplier'],
+            ]);
+        }
 
         // Check if the product already exists in the products table
         $product = Product::where('name', $validatedData['product_name'])->first();

@@ -11,10 +11,11 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->text('description');
+            $table->text('description')->nullable(); // Allow NULL values for description
             $table->string('type');
             $table->integer('quantity')->default(0);
-            $table->decimal('price_per_item', 10, 2)->default(0)->after('quantity');
+            $table->decimal('price_per_item', 10, 2)->default(0); // Removed the `after` clause
+            $table->integer('min_stock_level')->default(5);
             $table->foreignId('supplier_id')->constrained();
             $table->string('serial_number')->nullable()->unique();
             $table->text('specifications')->nullable();

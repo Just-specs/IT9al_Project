@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('product_id');
             $table->foreignId('purchase_order_id')->constrained();
-            $table->string('product_name')->after('purchase_order_id');
+            $table->string('product_name');
             $table->integer('quantity_ordered');
             $table->date('order_date');
             $table->timestamps();
 
-            $table->foreign('part_id')->references('id')->on('products');
+            $table->foreign('product_id')->references('id')->on('products');
         });
     }
 

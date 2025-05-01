@@ -30,10 +30,10 @@ class PurchaseOrderController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'supplier_id' => 'required|exists:suppliers,id',
             'product_name' => 'required|string|max:255',
             'quantity' => 'required|integer|min:1',
-            'status' => 'required|in:pending,completed,cancelled', // Validate against valid enum values
+            'supplier_id' => 'required|exists:suppliers,id',
+            'status' => 'required|in:pending,completed,cancelled',
         ]);
 
         // Deduct the purchased quantity from the product's stock
@@ -45,10 +45,12 @@ class PurchaseOrderController extends Controller
             $product->decrement('quantity', $validatedData['quantity']);
         }
 
+        // Create the purchase order
         PurchaseOrder::create([
+            'product_name' => $validatedData['product_name'],
+            'quantity' => $validatedData['quantity'],
             'supplier_id' => $validatedData['supplier_id'],
-            'total_amount' => 0, // Default value
-            'status' => $validatedData['status'], // Ensure status is properly quoted
+            'status' => $validatedData['status'],
         ]);
 
         return redirect()->route('purchase_orders.index')->with('success', 'Purchase order created successfully!');

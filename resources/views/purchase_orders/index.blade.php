@@ -69,7 +69,13 @@
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label for="product_name" class="form-label">Product Name</label>
-                                <input type="text" class="form-control" id="product_name" name="product_name" value="{{ old('product_name', $order->product_name) }}" required>
+                                <select class="form-control" id="product_name" name="product_name" required>
+                                    @foreach($products as $product)
+                                    <option value="{{ $product->name }}" {{ $product->name == $order->product_name ? 'selected' : '' }}>
+                                        {{ $product->name }}
+                                    </option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="mb-3">
                                 <label for="quantity" class="form-label">Quantity</label>
@@ -129,7 +135,7 @@
                         <select class="form-control" id="product_name" name="product_name" required>
                             <option value="" disabled selected>Select Product</option>
                             @foreach($products as $product)
-                            <option value="{{ $product->name }}">{{ $product->name }}</option>
+                            <option value="{{ $product->name }}" data-price="{{ $product->price_per_item }}">{{ $product->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -154,6 +160,10 @@
                             <option value="cancelled">Cancelled</option>
                         </select>
                     </div>
+                    <div class="mb-3">
+                        <label for="total_amount" class="form-label">Total Amount</label>
+                        <input type="text" class="form-control" id="total_amount" name="total_amount" readonly>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Submit</button>
@@ -162,6 +172,20 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.getElementById('product_name').addEventListener('change', calculateTotal);
+    document.getElementById('quantity').addEventListener('input', calculateTotal);
+
+    function calculateTotal() {
+        const productSelect = document.getElementById('product_name');
+        const selectedOption = productSelect.options[productSelect.selectedIndex];
+        const price = parseFloat(selectedOption.getAttribute('data-price')) || 0;
+        const quantity = parseInt(document.getElementById('quantity').value) || 0;
+        const totalAmount = price * quantity;
+        document.getElementById('total_amount').value = totalAmount.toFixed(2);
+    }
+</script>
 
 <!-- Include Bootstrap JS -->
 <script src="{{ asset('admin_assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>

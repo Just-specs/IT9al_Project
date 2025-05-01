@@ -15,7 +15,6 @@
         <tr>
             <th>#</th>
             <th>Name</th>
-            <th>Type</th>
             <th>Quantity</th>
             <th>Price per Item</th>
             <th>Status</th>
@@ -28,7 +27,6 @@
         <tr class="{{ $product->quantity == 0 ? 'table-danger' : ($product->quantity < 10 ? 'table-warning' : '') }}">
             <td class="align-middle">{{ $loop->iteration }}</td>
             <td class="align-middle">{{ $product->name }}</td>
-            <td class="align-middle">{{ $product->type }}</td>
             <td class="align-middle">{{ $product->quantity }}</td>
             <td class="align-middle">₱{{ number_format($product->price_per_item, 2) }}</td>
             <td class="align-middle">
@@ -45,7 +43,7 @@
         @endforeach
         @else
         <tr>
-            <td class="text-center" colspan="7">No products found</td>
+            <td class="text-center" colspan="6">No products found</td>
         </tr>
         @endif
     </tbody>
