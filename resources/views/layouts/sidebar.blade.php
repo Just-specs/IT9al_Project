@@ -43,6 +43,18 @@
             <span>Stock</span></a>
     </li>
 
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('employees') }}">
+            <i class="fas fa-users"></i>
+            <span>Employees</span></a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('departments') }}">
+            <i class="fas fa-building"></i>
+            <span>Departments</span></a>
+    </li>
+
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
 
