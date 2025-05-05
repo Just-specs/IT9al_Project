@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PurchaseOrder extends Model
 {
@@ -14,26 +16,32 @@ class PurchaseOrder extends Model
         'total_amount',
         'status',
     ];
-
-    public function supplier()
+    
+    /**
+     * Get the supplier associated with this purchase order.
+     */
+    public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class);
     }
 
-    public function orderDetails()
+    public function products()
+{
+    return $this->belongsToMany(Product::class, 'order_details', 'purchase_order_id', 'part_id')
+                ->withPivot('quantity_ordered');
+}
+
+
+    public function orderDetails(): HasMany
     {
-        return $this->hasMany(OrderDetail::class, 'purchase_order_id');
+        return $this->hasMany(OrderDetail::class);
     }
 
-    public function purchaseOrderReceivings()
+    /**
+     * Get the purchase order receiving records associated with this purchase order.
+     */
+    public function receivings(): HasMany
     {
-        return $this->hasMany(PurchaseOrderReceiving::class);
-    }
-
-    public function calculateTotalAmount()
-    {
-        return $this->orderDetails->sum(function ($detail) {
-            return $detail->quantity * $detail->product->price_per_item;
-        });
+        return $this->hasMany(PurchaseOrderReceiving::class, 'order_detail_id');
     }
 }

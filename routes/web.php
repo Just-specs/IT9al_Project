@@ -83,18 +83,26 @@ Route::middleware('auth')->group(function () {
 
     // Purchase Order Routes
     Route::controller(PurchaseOrderController::class)->prefix('purchase-orders')->group(function () {
-        Route::get('', 'index')->name('purchase-orders');
+        Route::get('', 'index')->name('purchase-orders.index');
         Route::get('create', 'create')->name('purchase-orders.create');
-        Route::post('store', 'store')->name('purchase-orders.store');
-        Route::get('show/{id}', 'show')->name('purchase-orders.show');
-        Route::get('edit/{id}', 'edit')->name('purchase-orders.edit');
-        Route::put('edit/{id}', 'update')->name('purchase-orders.update');
-        Route::delete('destroy/{id}', 'destroy')->name('purchase-orders.destroy');
-        Route::get('receive/{id}', 'showReceiveForm')->name('purchase-orders.receive-form');
-        Route::post('receive/{id}', 'receiveOrder')->name('purchase-orders.receive');
+        Route::post('', 'store')->name('purchase-orders.store');
+        Route::get('{purchaseOrder}', 'show')->name('purchase-orders.show');
+        Route::get('{purchaseOrder}/edit', 'edit')->name('purchase-orders.edit');
+        Route::put('{purchaseOrder}', 'update')->name('purchase-orders.update');
+        Route::delete('{purchaseOrder}', 'destroy')->name('purchase-orders.destroy');
+        
+        Route::get('generate/low-stock', 'generateForLowStock')->name('purchase-orders.generate-low-stock');
+        Route::patch('{purchaseOrder}/status', 'updateStatus')->name('purchase-orders.update-status');
+        Route::get('{purchaseOrder}/receive', 'showReceiveForm')->name('purchase-orders.receive-form');
+        Route::post('{purchaseOrder}/receive', 'processReceive')->name('purchase-orders.process-receive');
     });
 
-    Route::resource('purchase_orders', PurchaseOrderController::class);
+    // Purchase Order Receiving Routes
+    Route::get('receivings', [PurchaseOrderReceivingController::class, 'index'])->name('receivings.index');
+    Route::get('order-details/{orderDetail}/receivings/create', [PurchaseOrderReceivingController::class, 'create'])->name('receivings.create');
+    Route::post('order-details/{orderDetail}/receivings', [PurchaseOrderReceivingController::class, 'store'])->name('receivings.store');
+    Route::get('receivings/{receiving}', [PurchaseOrderReceivingController::class, 'show'])->name('receivings.show');
+    Route::delete('receivings/{receiving}', [PurchaseOrderReceivingController::class, 'destroy'])->name('receivings.destroy');
 
     // Inventory Issue Routes
     Route::controller(InventoryIssueController::class)->prefix('inventory-issues')->group(function () {

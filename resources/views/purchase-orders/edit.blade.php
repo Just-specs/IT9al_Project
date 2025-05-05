@@ -3,7 +3,7 @@
 @section('contents')
 <div class="d-flex align-items-center justify-content-between">
     <h1 class="mb-0">Edit Purchase Order</h1>
-    <a href="{{ route('purchase_orders.index') }}" class="btn btn-secondary">Back</a>
+    <a href="{{ route('purchase-orders.index') }}" class="btn btn-secondary">Back</a>
 </div>
 <hr />
 <form action="{{ route('purchase-orders.update', $purchaseOrder->id) }}" method="POST">

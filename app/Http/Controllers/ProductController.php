@@ -30,18 +30,20 @@ class ProductController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+    {   \Log::info($request->all());
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
             'type' => 'required|string|max:255',
             'quantity' => 'required|integer|min:0',
             'min_stock_level' => 'required|integer|min:0',
-            'supplier_id' => 'required|exists:suppliers,id',
-            'serial_number' => 'nullable|string|max:255|unique:products',
             'specifications' => 'nullable|string',
+            'price_per_item' => 'required|numeric|min:0',
             'status' => 'required|in:available,assigned,maintenance,retired'
         ]);
+
+        // Automatically generate a unique serial number
+        $validated['serial_number'] = 'SN-' . strtoupper(uniqid());
 
         Product::create($validated);
 
@@ -80,7 +82,6 @@ class ProductController extends Controller
             'type' => 'required|string|max:255',
             'quantity' => 'required|integer|min:0',
             'min_stock_level' => 'required|integer|min:0',
-            'supplier_id' => 'required|exists:suppliers,id',
             'serial_number' => 'nullable|string|max:255|unique:products,serial_number,' . $id,
             'specifications' => 'nullable|string',
             'status' => 'required|in:available,assigned,maintenance,retired'

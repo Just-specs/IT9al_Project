@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('supplier_id')->constrained();
             $table->decimal('total_amount', 10, 2)->default(0);
-            $table->enum('status', ['pending', 'completed', 'cancelled'])->default('pending'); // Ensure valid enum values
+            $table->enum('status', ['pending', 'approved', 'completed', 'cancelled'])->default('pending');
             $table->timestamps();
         });
     }
@@ -26,5 +26,15 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('purchase_orders');
+    }
+
+    /**
+     * Update the migrations.
+     */
+    public function update()
+    {
+        Schema::table('purchase_orders', function (Blueprint $table) {
+            $table->enum('status', ['pending', 'approved', 'completed', 'cancelled'])->default('pending')->change();
+        });
     }
 };

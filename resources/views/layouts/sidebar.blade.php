@@ -32,7 +32,7 @@
 
     <!-- Nav Item - Purchase Orders -->
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('purchase-orders') }}">
+        <a class="nav-link" href="{{ route('purchase-orders.index') }}">
             <i class="fas fa-fw fa-file-invoice"></i>
             <span>Purchase Orders</span></a>
     </li>

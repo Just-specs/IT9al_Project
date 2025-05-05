@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('contents')
-<h1 class="mb-0">Add New Computer Part</h1>
+<h1 class="mb-0">Add New Computer Parts</h1>
 <hr />
 <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
@@ -32,35 +32,22 @@
         </div>
     </div>
     <div class="row mb-3">
-        <div class="col-md-4">
+        <div class="col-md-6">
             <label class="form-label">Quantity</label>
             <input type="number" name="quantity" class="form-control @error('quantity') is-invalid @enderror" value="{{ old('quantity', 0) }}">
             @error('quantity')
             <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             <label class="form-label">Minimum Stock Level</label>
             <input type="number" name="min_stock_level" class="form-control @error('min_stock_level') is-invalid @enderror" value="{{ old('min_stock_level', 5) }}">
             @error('min_stock_level')
             <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
-        <div class="col-md-4">
-            <label class="form-label">Supplier</label>
-            <select name="supplier_id" class="form-control @error('supplier_id') is-invalid @enderror">
-                <option value="">-- Select Supplier --</option>
-                @foreach($suppliers as $supplier)
-                <option value="{{ $supplier->id }}" {{ old('supplier_id') == $supplier->id ? 'selected' : '' }}>{{ $supplier->name }}</option>
-                @endforeach
-            </select>
-            @error('supplier_id')
-            <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
     </div>
     <div class="row mb-3">
-
         <div class="col-md-6">
             <label class="form-label">Status</label>
             <select name="status" class="form-control @error('status') is-invalid @enderror">
@@ -73,6 +60,7 @@
             <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
+        <div class="col-md-6"></div>
     </div>
     <div class="row mb-3">
         <div class="col-md-12">
@@ -84,11 +72,24 @@
         </div>
     </div>
     <div class="row mb-3">
-
+        <div class="col-md-6">
+            <label class="form-label">Specifications</label>
+            <textarea name="specifications" class="form-control @error('specifications') is-invalid @enderror" rows="2">{{ old('specifications') }}</textarea>
+            @error('specifications')
+            <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Price per Item</label>
+            <input type="number" step="0.01" name="price_per_item" class="form-control @error('price_per_item') is-invalid @enderror" value="{{ old('price_per_item', 0) }}">
+            @error('price_per_item')
+            <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
+        </div>
     </div>
     <div class="row">
-        <div class="d-grid">
-            <button type="submit" class="btn btn-primary">Submit</button>
+        <div class="col-12 text-end">
+            <button type="submit" class="btn btn-primary">Add</button>
         </div>
     </div>
 </form>

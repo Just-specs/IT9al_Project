@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
-@section('title', 'Show Computer Part')
+
 
 @section('contents')
 <div class="d-flex align-items-center justify-content-between">
-    <h1 class="mb-0">Computer Part Details</h1>
+    <h1 class="mb-0">Computer Part</h1>
     <div>
         <a href="{{ route('products') }}" class="btn btn-secondary">Back</a>
         <a href="{{ route('products.edit', $product->id) }}" class="btn btn-warning">Edit</a>
@@ -45,10 +45,7 @@
                     <div class="col-md-4 fw-bold">Serial Number:</div>
                     <div class="col-md-8">{{ $product->serial_number ?? 'N/A' }}</div>
                 </div>
-                <div class="row mb-3">
-                    <div class="col-md-4 fw-bold">Supplier:</div>
-                    <div class="col-md-8">{{ $product->supplier->name ?? 'N/A' }}</div>
-                </div>
+                
             </div>
         </div>
     </div>
