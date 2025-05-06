@@ -45,7 +45,7 @@ class SupplierController extends Controller
      */
     public function show(string $id)
     {
-        $supplier = Supplier::with('products')->findOrFail($id);
+        $supplier = Supplier::with('suppliedProducts')->findOrFail($id);
         return view('suppliers.show', compact('supplier'));
     }
 
@@ -82,7 +82,25 @@ class SupplierController extends Controller
     public function destroy(string $id)
     {
         $supplier = Supplier::findOrFail($id);
+
+        // Check if supplier is used in any purchase order
+        if ($supplier->purchaseOrders()->count() > 0) {
+            return redirect()->route('suppliers')
+                ->withErrors(['error' => 'Cannot delete supplier because it is used in one or more purchase orders.']);
+        }
+
         $supplier->delete();
         return redirect()->route('suppliers')->with('success', 'Supplier deleted successfully');
+    }
+
+    // Add this method to support AJAX supplier filtering by product
+    public function suppliersForProduct(Request $request)
+    {
+        $productId = $request->input('product_id');
+        if (!$productId) {
+            return response()->json([]);
+        }
+        $product = \App\Models\Product::with('suppliers')->find($productId);
+        return response()->json($product ? $product->suppliers : []);
     }
 }

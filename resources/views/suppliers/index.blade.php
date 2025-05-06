@@ -3,7 +3,7 @@
 @section('contents')
 <div class="d-flex align-items-center justify-content-between">
     <h1 class="mb-0">Suppliers</h1>
-    <!-- Button trigger modal -->
+  
     <button type="button" class="btn btn-primary" onclick="$('#addSupplierModal').modal('show')">
         Add New Supplier
     </button>
@@ -13,6 +13,13 @@
 <div class="alert alert-success" role="alert">
     {{ Session::get('success') }}
 </div>
+@endif
+@if($errors->any())
+    <div class="alert alert-danger">
+        @foreach($errors->all() as $error)
+            <div>{{ $error }}</div>
+        @endforeach
+    </div>
 @endif
 <table class="table table-hover">
     <thead class="table-primary">
@@ -34,6 +41,7 @@
             <td class="align-middle">{{ $supplier->email }}</td>
             <td class="align-middle">
                 <div class="btn-group" role="group">
+                    <a href="{{ route('suppliers.show', $supplier->id) }}" class="btn btn-info">Details</a>
                     <button type="button" class="btn btn-warning" onclick="$('#editSupplierModal{{ $supplier->id }}').modal('show')">
                         Edit
                     </button>

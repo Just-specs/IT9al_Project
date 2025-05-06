@@ -55,6 +55,8 @@
                         <th>Item</th>
                         <th>Type</th>
                         <th class="text-end">Quantity Ordered</th>
+                        <th class="text-end">Price per Item</th>
+                        <th class="text-end">Total Price</th>
                         <th class="text-end">Quantity Received</th>
                         <th>Status</th>
                     </tr>
@@ -65,6 +67,8 @@
                         <td>{{ $item->description ?? 'Product not found' }}</td>
                         <td>{{ $item->type ?? '-' }}</td>
                         <td class="text-end">{{ $item->pivot->quantity_ordered ?? 0 }}</td>
+                        <td class="text-end">${{ number_format($item->pivot->price_per_item ?? 0, 2) }}</td>
+                        <td class="text-end">${{ number_format(($item->pivot->price_per_item ?? 0) * ($item->pivot->quantity_ordered ?? 0), 2) }}</td>
                         <td class="text-end">0</td> <!-- Placeholder for received quantity -->
                         <td>
                             <span class="badge bg-warning">Pending</span>
@@ -72,7 +76,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="5" class="text-center">No items found for this purchase order.</td>
+                        <td colspan="7" class="text-center">No items found for this purchase order.</td>
                     </tr>
                     @endforelse
                 </tbody>

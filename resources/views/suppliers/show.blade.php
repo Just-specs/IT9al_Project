@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Supplier Details')
+
 
 @section('contents')
 <div class="d-flex align-items-center justify-content-between">
     <h1 class="mb-0">Supplier Details</h1>
     <div>
         <a href="{{ route('suppliers') }}" class="btn btn-secondary">Back</a>
-        <a href="{{ route('suppliers.edit', $supplier->id) }}" class="btn btn-warning">Edit</a>
+     
     </div>
 </div>
 <hr />
@@ -48,23 +48,22 @@
                 Supplied Products
             </div>
             <div class="card-body">
-                @if($supplier->products->count() > 0)
+                @if($supplier->suppliedProducts->count() > 0)
                 <table class="table table-sm">
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>Name</th>
                             <th>Type</th>
-                            <th>Quantity</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($supplier->products as $product)
+                        @foreach($supplier->suppliedProducts as $product)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
                             <td>{{ $product->name }}</td>
                             <td>{{ $product->type }}</td>
-                            <td>{{ $product->quantity }}</td>
+                           
                         </tr>
                         @endforeach
                     </tbody>

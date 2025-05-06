@@ -48,12 +48,11 @@ class PurchaseOrderController extends Controller
         try {
             DB::beginTransaction();
 
-            // Calculate total amount based on products
+            // Calculate total amount based on products and their prices
             $totalAmount = 0;
             foreach ($request->products as $product) {
-                // In a real system, you would get the price from the product or have a price field
-                // For now, we'll just use quantity as a placeholder for calculation
-                $totalAmount += $product['quantity'] * 1; // Assuming $1 per unit
+                $productModel = Product::find($product['id']);
+                $totalAmount += $product['quantity'] * $productModel->price_per_item;
             }
 
             // Create purchase order
@@ -65,10 +64,12 @@ class PurchaseOrderController extends Controller
 
             // Create order details
             foreach ($request->products as $product) {
+                $productModel = Product::find($product['id']);
                 OrderDetail::create([
                     'part_id' => $product['id'],
                     'purchase_order_id' => $purchaseOrder->id,
                     'quantity_ordered' => $product['quantity'],
+                    'price_per_item' => $productModel->price_per_item,
                     'order_date' => now(),
                 ]);
             }
@@ -88,11 +89,10 @@ class PurchaseOrderController extends Controller
      * Display the specified purchase order.
      */
     public function show($id)
-{
-    $purchaseOrder = PurchaseOrder::with('products')->findOrFail($id);
-    return view('purchase-orders.show', compact('purchaseOrder'));
-}
-
+    {
+        $purchaseOrder = PurchaseOrder::with(['products', 'supplier'])->findOrFail($id);
+        return view('purchase-orders.show', compact('purchaseOrder'));
+    }
 
     /**
      * Update the status of a purchase order.

@@ -15,13 +15,15 @@ class Supplier extends Model
         'email'
     ];
 
-    public function products()
-    {
-        return $this->hasMany(Product::class);
-    }
+
 
     public function purchaseOrders()
     {
         return $this->hasMany(PurchaseOrder::class);
+    }
+
+    public function suppliedProducts()
+    {
+        return $this->belongsToMany(Product::class, 'product_supplier');
     }
 }

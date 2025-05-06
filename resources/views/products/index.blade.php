@@ -19,8 +19,6 @@
             <th>#</th>
             <th>Name</th>
             <th>Type</th>
-            <th>Quantity</th>
-            <th>Min Stock</th>
             <th>Status</th>
             <th>Action</th>
         </tr>
@@ -32,8 +30,6 @@
             <td class="align-middle">{{ $loop->iteration }}</td>
             <td class="align-middle">{{ $product->name }}</td>
             <td class="align-middle">{{ $product->type }}</td>
-            <td class="align-middle">{{ $product->quantity }}</td>
-            <td class="align-middle">{{ $product->min_stock_level }}</td>
             <td class="align-middle">
                 @if($product->status == 'available')
                 <span class="badge bg-success">Available</span>

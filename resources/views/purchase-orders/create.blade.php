@@ -33,14 +33,10 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="supplier_id">Supplier:</label>
-                            <select name="supplier_id" id="supplier_id" class="form-control" required>
+                            <select name="supplier_id" id="supplier_id" class="form-control" required disabled>
                                 <option value="">Select Supplier</option>
-                                @foreach($suppliers as $supplier)
-                                    <option value="{{ $supplier->id }}" {{ (request('supplier_id') == $supplier->id) ? 'selected' : '' }}>
-                                        {{ $supplier->name }}
-                                    </option>
-                                @endforeach
                             </select>
+                            <small id="supplier-helper" class="text-muted">Please select a product first.</small>
                         </div>
                     </div>
                 </div>
@@ -89,59 +85,46 @@
     </div>
 </div>
 
-@push('scripts')
 <script>
+console.log('Script loaded');
+document.addEventListener('DOMContentLoaded', function() {
+    const productSelect = document.querySelector('.product-select');
+    const supplierSelect = document.getElementById('supplier_id');
+    const supplierHelper = document.getElementById('supplier-helper');
 
-            // Update input names
-            newRow.querySelectorAll('select, input').forEach(function(element) {
-                const name = element.getAttribute('name');
-                element.setAttribute('name', name.replace(/\[\d+\]/, `[${rowCount}]`));
-                
-                // Clear values
-                if (element.tagName === 'SELECT') {
-                    element.selectedIndex = 0;
-                } else if (element.tagName === 'INPUT') {
-                    element.value = 1;
-                }
-            });
-            
-            
-        
+    // Always start disabled
+    supplierSelect.disabled = true;
+    supplierHelper.style.display = '';
 
-        
-       
-        
-        // Form validation
-        document.getElementById('poForm').addEventListener('submit', function(e) {
-            const supplierSelect = document.getElementById('supplier_id');
-            if (!supplierSelect.value) {
-                e.preventDefault();
-                alert('Please select a supplier');
-                return;
-            }
-            
-            const productSelects = document.querySelectorAll('.product-select');
-            let isValid = true;
-            let selectedproducts = [];
-            
-            productSelects.forEach(function(select) {
-                if (!select.value) {
-                    isValid = false;
-                } else if (selectedproducts.includes(select.value)) {
-                    isValid = false;
-                    alert('You have duplicate products. Please use the quantity field instead.');
-                    e.preventDefault();
+    productSelect.addEventListener('change', function() {
+        console.log('Product changed:', this.value);
+        const productId = this.value;
+        supplierSelect.innerHTML = '<option value="">Select Supplier</option>';
+        if (!productId) {
+            supplierSelect.disabled = true;
+            supplierHelper.textContent = 'Please select a product first.';
+            supplierHelper.style.display = '';
+            return;
+        }
+        fetch('/suppliers/for-product?product_id=' + productId)
+            .then(response => response.json())
+            .then(suppliers => {
+                console.log('Suppliers returned:', suppliers);
+                if (suppliers.length === 0) {
+                    supplierSelect.innerHTML = '<option value="">No supplier found for this product</option>';
+                    supplierSelect.disabled = true;
+                    supplierHelper.textContent = 'No supplier found for this product.';
+                    supplierHelper.style.display = '';
                 } else {
-                    selectedproducts.push(select.value);
+                    supplierSelect.disabled = false;
+                    supplierSelect.innerHTML = '<option value="">Select Supplier</option>';
+                    suppliers.forEach(function(supplier) {
+                        supplierSelect.innerHTML += `<option value="${supplier.id}">${supplier.name}</option>`;
+                    });
+                    supplierHelper.style.display = 'none';
                 }
             });
-            
-            if (!isValid) {
-                e.preventDefault();
-                alert('Please select all products before submitting');
-            }
-        });
     });
+});
 </script>
-@endpush
 @endsection

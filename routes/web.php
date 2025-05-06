@@ -142,3 +142,5 @@ Route::get('/stock-in', [StockController::class, 'index'])->name('stock.index');
 Route::post('/stock-in', [StockController::class, 'store'])->name('stock.store');
 
 Route::get('/search', [SearchController::class, 'index'])->name('search');
+
+Route::get('/suppliers/for-product', [App\Http\Controllers\SupplierController::class, 'suppliersForProduct'])->name('suppliers.for-product');

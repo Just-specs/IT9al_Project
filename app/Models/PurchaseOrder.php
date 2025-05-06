@@ -26,11 +26,11 @@ class PurchaseOrder extends Model
     }
 
     public function products()
-{
-    return $this->belongsToMany(Product::class, 'order_details', 'purchase_order_id', 'part_id')
-                ->withPivot('quantity_ordered');
-}
-
+    {
+        return $this->belongsToMany(Product::class, 'order_details', 'purchase_order_id', 'part_id')
+                    ->withPivot('quantity_ordered')
+                    ->select(['products.*', 'order_details.quantity_ordered']);
+    }
 
     public function orderDetails(): HasMany
     {

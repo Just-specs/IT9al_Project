@@ -22,7 +22,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $suppliers = Supplier::all();
+        $suppliers = \App\Models\Supplier::all();
         return view('products.create', compact('suppliers'));
     }
 
@@ -39,13 +39,16 @@ class ProductController extends Controller
             'min_stock_level' => 'required|integer|min:0',
             'specifications' => 'nullable|string',
             'price_per_item' => 'required|numeric|min:0',
-            'status' => 'required|in:available,assigned,maintenance,retired'
+            'status' => 'required|in:available,assigned,maintenance,retired',
+            'suppliers' => 'array',
+            'suppliers.*' => 'exists:suppliers,id',
         ]);
 
         // Automatically generate a unique serial number
         $validated['serial_number'] = 'SN-' . strtoupper(uniqid());
 
-        Product::create($validated);
+        $product = Product::create($validated);
+        $product->suppliers()->sync($request->input('suppliers', []));
 
         return redirect()->route('products')->with('success', 'Product added successfully');
     }
@@ -64,8 +67,8 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        $product = Product::findOrFail($id);
-        $suppliers = Supplier::all();
+        $product = Product::with('suppliers')->findOrFail($id);
+        $suppliers = \App\Models\Supplier::all();
         return view('products.edit', compact('product', 'suppliers'));
     }
 
@@ -84,10 +87,13 @@ class ProductController extends Controller
             'min_stock_level' => 'required|integer|min:0',
             'serial_number' => 'nullable|string|max:255|unique:products,serial_number,' . $id,
             'specifications' => 'nullable|string',
-            'status' => 'required|in:available,assigned,maintenance,retired'
+            'status' => 'required|in:available,assigned,maintenance,retired',
+            'suppliers' => 'array',
+            'suppliers.*' => 'exists:suppliers,id',
         ]);
 
         $product->update($validated);
+        $product->suppliers()->sync($request->input('suppliers', []));
 
         return redirect()->route('products')->with('success', 'Product updated successfully');
     }

@@ -35,7 +35,7 @@
                         <th>PO #</th>
                         <th>Supplier</th>
                         <th>Date</th>
-                        <th>Amount</th>
+                        <th class="text-end">Total Amount</th>
                         <th>Status</th>
                         <th width="200px">Action</th>
                     </tr>
@@ -46,7 +46,7 @@
                         <td>{{ $po->id }}</td>
                         <td>{{ $po->supplier->name }}</td>
                         <td>{{ $po->created_at->format('M d, Y') }}</td>
-                        <td>${{ number_format($po->total_amount, 2) }}</td>
+                        <td class="text-end fw-bold">${{ number_format($po->total_amount, 2) }}</td>
                         <td>
                             <span class="badge bg-{{ 
                                 $po->status == 'pending' ? 'warning' : 

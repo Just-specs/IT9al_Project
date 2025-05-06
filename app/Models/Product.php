@@ -37,6 +37,11 @@ class Product extends Model
         return $this->hasMany(OrderDetail::class, 'part_id');
     }
 
+    public function suppliers()
+    {
+        return $this->belongsToMany(Supplier::class, 'product_supplier');
+    }
+
     // Check if product is low on stock
     public function isLowStock()
     {

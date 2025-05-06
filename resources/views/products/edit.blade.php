@@ -92,6 +92,29 @@
             @enderror
         </div>
     </div>
+    <div class="row mb-3">
+        <div class="col-md-12">
+            <label class="form-label">Suppliers</label>
+            <div>
+                @foreach($suppliers as $supplier)
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               name="suppliers[]"
+                               id="supplier_{{ $supplier->id }}"
+                               value="{{ $supplier->id }}"
+                               {{ ($product->suppliers->contains($supplier->id)) || (is_array(old('suppliers')) && in_array($supplier->id, old('suppliers', []))) ? 'checked' : '' }}>
+                        <label class="form-check-label" for="supplier_{{ $supplier->id }}">
+                            {{ $supplier->name }}
+                        </label>
+                    </div>
+                @endforeach
+            </div>
+            @error('suppliers')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+    </div>
     <div class="row">
     <div class="col-12 text-end">
             <button type="submit" class="btn btn-warning">Update</button>
