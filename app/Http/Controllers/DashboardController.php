@@ -55,4 +55,25 @@ class DashboardController extends Controller
             'totalPurchaseOrders'
         ));
     }
+
+    public function employeeDashboard()
+    {
+        $totalProducts = Product::count();
+        $lowStockItems = Product::where('quantity', '<', 10)->count();
+        $totalSuppliers = Supplier::count();
+        $totalPurchaseOrders = PurchaseOrder::count();
+        $recentActivities = InventoryIssue::with(['product', 'employee'])->latest()->take(5)->get();
+        $pendingOrders = PurchaseOrder::where('status', 'pending')->get();
+        $itemsByStatus = Product::selectRaw('status, COUNT(*) as total')->groupBy('status')->get();
+
+        return view('employees.dashboard', compact(
+            'totalProducts',
+            'lowStockItems',
+            'totalSuppliers',
+            'totalPurchaseOrders',
+            'recentActivities',
+            'pendingOrders',
+            'itemsByStatus'
+        ));
+    }
 }

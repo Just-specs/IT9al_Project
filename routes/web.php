@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SupplierController;
-use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\InventoryIssueController;
@@ -13,7 +12,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\SearchController;
-
+use App\Http\Controllers\DepartmentController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -35,6 +34,9 @@ Route::get('logout', [AuthController::class, 'logout'])->middleware('auth')->nam
 
 Route::middleware('auth')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // Define the employee dashboard route
+    Route::get('employee/dashboard', [DashboardController::class, 'employeeDashboard'])->name('employee.dashboard');
 
     // Products Routes
     Route::controller(ProductController::class)->prefix('products')->group(function () {

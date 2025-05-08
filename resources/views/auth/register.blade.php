@@ -22,16 +22,64 @@
             height: 100vh;
             margin: 0;
             color: white;
-            background: url("{{ asset('image/bg.jpeg') }}") no-repeat center center;
-            background-size: cover;
+            animation: slideshow 20s infinite;
+        }
+
+        @keyframes slideshow {
+            0% {
+                background: url("{{ asset('image/bg3.jpeg') }}") no-repeat center center / cover;
+            }
+
+            25% {
+                background: url("{{ asset('image/bg2.avif') }}") no-repeat center center / cover;
+            }
+
+            50% {
+                background: url("{{ asset('image/bg4.png') }}") no-repeat center center / cover;
+            }
+
+            75% {
+                background: url("{{ asset('image/bg5.jpg') }}") no-repeat center center / cover;
+            }
+
+            100% {
+                background: url("{{ asset('image/bg3.jpeg') }}") no-repeat center center / cover;
+            }
         }
 
         .card {
             width: 100%;
             max-width: 450px;
             border-radius: 10px;
-            background: rgba(0, 0, 0, 0.5);
-            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.8);
+            color: white;
+        }
+
+        .form-control {
+            background: white;
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            color: black;
+        }
+
+        .form-control:focus {
+            background: white;
+            border-color: #007bff;
+            color: black;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+
+        .alert {
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -57,28 +105,16 @@
                         </div>
                         @endif
                         <div class="form-group">
-                            <input name="name" type="text" class="form-control form-control-user @error('name')is-invalid @enderror" placeholder="Name">
-                            @error('name')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
+                            <input name="name" type="text" class="form-control form-control-user" placeholder="Name">
                         </div>
                         <div class="form-group">
-                            <input name="email" type="email" class="form-control form-control-user @error('email')is-invalid @enderror" placeholder="Email Address">
-                            @error('email')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
+                            <input name="email" type="email" class="form-control form-control-user" placeholder="Email Address">
                         </div>
                         <div class="form-group">
-                            <input name="password" type="password" class="form-control form-control-user @error('password')is-invalid @enderror" placeholder="Password">
-                            @error('password')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
+                            <input name="password" type="password" class="form-control form-control-user" placeholder="Password">
                         </div>
                         <div class="form-group">
-                            <input name="password_confirmation" type="password" class="form-control form-control-user @error('password_confirmation')is-invalid @enderror" placeholder="Repeat Password">
-                            @error('password_confirmation')
-                            <span class="invalid-feedback">{{ $message }}</span>
-                            @enderror
+                            <input name="password_confirmation" type="password" class="form-control form-control-user" placeholder="Repeat Password">
                         </div>
                         <button type="submit" class="btn btn-primary btn-user btn-block">Register Account</button>
                     </form>

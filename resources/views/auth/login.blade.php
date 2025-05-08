@@ -25,7 +25,7 @@
             background-size: cover;
             background-position: center;
             background-repeat: repeat;
-            animation: slideshow 15s infinite;
+            animation: slideshow 20s infinite;
         }
 
         @keyframes slideshow {
@@ -69,7 +69,7 @@
                     <div class="card o-hidden border-0 shadow-lg">
                         <div class="card-body p-4">
                             <div class="text-center mb-4">
-                                <img src="{{ asset('image/logo.png') }}" alt="Logo" style="width: 150px; height: auto;" class="mb-3"> <!-- Increased logo size -->
+                                <img src="{{ asset('image/logo.png') }}" alt="Logo" style="width: 150px; height: auto;" class="mb-3">
                                 <h1 class="h4 text-white-900" style="color: white;">Welcome Back!</h1>
                             </div>
                             <form action="{{ route('login.action') }}" method="POST" class="user">
@@ -84,12 +84,17 @@
                                 </div>
                                 @endif
                                 <div class="form-group">
-                                    <input name="email" type="email" class="form-control form-control-user" placeholder="Enter Email Address...">
+                                    <input name="email" type="email" class="form-control form-control-user" placeholder="Enter Email Address..." value="{{ old('email') }}" required>
                                 </div>
                                 <div class="form-group">
-                                    <input name="password" type="password" class="form-control form-control-user" placeholder="Password">
+                                    <input name="password" type="password" class="form-control form-control-user" placeholder="Password" required>
                                 </div>
-
+                                <div class="form-group">
+                                    <div class="custom-control custom-checkbox small">
+                                        <input type="checkbox" class="custom-control-input" id="remember" name="remember">
+                                        <label class="custom-control-label text-white" for="remember">Remember Me</label>
+                                    </div>
+                                </div>
                                 <button type="submit" class="btn btn-primary btn-user btn-block">Login</button>
                             </form>
                             <hr>

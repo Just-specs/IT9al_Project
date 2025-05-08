@@ -43,17 +43,20 @@
             <span>Stock</span></a>
     </li>
 
+    @if(Auth::user()->role === 'admin')
     <li class="nav-item">
         <a class="nav-link" href="{{ route('employees') }}">
             <i class="fas fa-users"></i>
-            <span>Employees</span></a>
+            <span>Employees</span>
+        </a>
     </li>
-
     <li class="nav-item">
         <a class="nav-link" href="{{ route('departments') }}">
             <i class="fas fa-building"></i>
-            <span>Departments</span></a>
+            <span>Departments</span>
+        </a>
     </li>
+    @endif
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
