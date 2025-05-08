@@ -9,7 +9,7 @@ class UpdateStatusColumnInPurchaseOrdersTable extends Migration
     public function up()
     {
         Schema::table('purchase_orders', function (Blueprint $table) {
-            $table->enum('status', ['pending', 'completed', 'cancelled'])->default('pending')->change();
+            $table->enum('status', ['pending', 'approved', 'partial', 'received', 'completed', 'cancelled'])->default('pending')->change();
         });
     }
 

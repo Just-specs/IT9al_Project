@@ -16,7 +16,6 @@ return new class extends Migration
             $table->integer('quantity')->default(0);
             $table->decimal('price_per_item', 10, 2)->default(0); // Removed the `after` clause
             $table->integer('min_stock_level')->default(5);
-            $table->foreignId('supplier_id')->constrained();
             $table->string('serial_number')->nullable()->unique();
             $table->text('specifications')->nullable();
             $table->enum('status', ['available', 'assigned', 'maintenance', 'retired'])->default('available');

@@ -13,6 +13,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\PurchaseOrderReceivingController;
 
 
 Route::get('/', function () {
@@ -103,7 +104,8 @@ Route::middleware('auth')->group(function () {
     Route::post('order-details/{orderDetail}/receivings', [PurchaseOrderReceivingController::class, 'store'])->name('receivings.store');
     Route::get('receivings/{receiving}', [PurchaseOrderReceivingController::class, 'show'])->name('receivings.show');
     Route::delete('receivings/{receiving}', [PurchaseOrderReceivingController::class, 'destroy'])->name('receivings.destroy');
-
+    Route::get('receivings/{purchaseOrder}/receive', [PurchaseOrderController::class, 'showReceiveForm'])->name('receivings.receive-form');
+    Route::get('stock-in', [PurchaseOrderReceivingController::class, 'stockInList'])->name('stock-in.index');
     // Inventory Issue Routes
     Route::controller(InventoryIssueController::class)->prefix('inventory-issues')->group(function () {
         Route::get('', 'index')->name('inventory-issues');
@@ -112,16 +114,7 @@ Route::middleware('auth')->group(function () {
         Route::get('show/{id}', 'show')->name('inventory-issues.show');
     });
 
-    // Stock Routes
-    Route::controller(StockController::class)->prefix('stock')->group(function () {
-        Route::get('', 'index')->name('stock'); // Ensure the "index" method in StockController passes $stocks
-        Route::get('create', 'create')->name('stock.create');
-        Route::post('store', 'store')->name('stock.store');
-        Route::get('show/{id}', 'show')->name('stock.show');
-        Route::get('edit/{id}', 'edit')->name('stock.edit');
-        Route::put('edit/{id}', 'update')->name('stock.update');
-        Route::delete('destroy/{id}', 'destroy')->name('stock.destroy');
-    });
+    
 
     // Reports Routes
     Route::controller(ReportController::class)->prefix('reports')->group(function () {
@@ -136,11 +129,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [App\Http\Controllers\AuthController::class, 'profile'])->name('profile');
 });
 
-// Stock Routes
-
-Route::get('/stock-in', [StockController::class, 'index'])->name('stock.index');
-Route::post('/stock-in', [StockController::class, 'store'])->name('stock.store');
-
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 
 Route::get('/suppliers/for-product', [App\Http\Controllers\SupplierController::class, 'suppliersForProduct'])->name('suppliers.for-product');
+

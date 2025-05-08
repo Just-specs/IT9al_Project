@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('contents')
-    <div class="container">
+<div class="container">
     <div class="row mb-4">
         <div class="col-md-8">
             <h2>Create Purchase Order</h2>
@@ -87,11 +87,11 @@
 
 <script>
 console.log('Script loaded');
-document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() {
     const productSelect = document.querySelector('.product-select');
     const supplierSelect = document.getElementById('supplier_id');
     const supplierHelper = document.getElementById('supplier-helper');
-
+                
     // Always start disabled
     supplierSelect.disabled = true;
     supplierHelper.style.display = '';
@@ -122,9 +122,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         supplierSelect.innerHTML += `<option value="${supplier.id}">${supplier.name}</option>`;
                     });
                     supplierHelper.style.display = 'none';
-                }
+            }
             });
+        });
     });
-});
 </script>
 @endsection

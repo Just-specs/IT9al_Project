@@ -38,9 +38,9 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('stock') }}">
-            <i class="fas fa-warehouse"></i>
-            <span>Stock</span></a>
+        <a class="nav-link" href="{{ route('stock-in.index') }}">
+            <i class="fas fa-arrow-down"></i>
+            <span>Stock In</span></a>
     </li>
 
     <li class="nav-item">

@@ -4,23 +4,17 @@
 <div class="row mb-4 align-items-center">
     <div class="col-md-8">
         <h2 class="fw-bold mb-0">Purchase Order #{{ $purchaseOrder->id }}</h2>
-        <span class="badge bg-{{ $purchaseOrder->status == 'pending' ? 'warning' : ($purchaseOrder->status == 'received' ? 'success' : ($purchaseOrder->status == 'approved' ? 'info' : 'primary')) }} ms-2">
+        <span class="badge bg-{{
+            $purchaseOrder->status == 'pending' ? 'warning' :
+            ($purchaseOrder->status == 'received' ? 'success' :
+            ($purchaseOrder->status == 'approved' ? 'primary' :
+            ($purchaseOrder->status == 'partial' ? 'info' : 'danger')))
+        }} ms-2">
             {{ ucfirst($purchaseOrder->status) }}
         </span>
     </div>
-    <div class="col-md-4 text-end">
+    <div class="col-md-4 d-flex justify-content-end align-items-center">
         <a href="{{ route('purchase-orders.index') }}" class="btn btn-secondary me-2">Back to List</a>
-        @if($purchaseOrder->status == 'pending')
-            <form action="{{ route('purchase-orders.update-status', $purchaseOrder->id) }}" method="POST" style="display:inline-block;">
-                @csrf
-                @method('PATCH')
-                <input type="hidden" name="status" value="approved">
-                <button type="submit" class="btn btn-primary">Approve</button>
-            </form>
-        @endif
-        @if($purchaseOrder->status == 'approved')
-            <a href="{{ route('purchase-orders.receive-form', $purchaseOrder->id) }}" class="btn btn-success">Record Receiving</a>
-        @endif
     </div>
 </div>
 
@@ -45,7 +39,7 @@
     </div>
 </div>
 
-<h4 class="fw-semibold mb-3">Order Items</h4>
+<h4 class="fw-semibold mb-3">Ordered Item</h4>
 <div class="card mb-4 shadow-sm">
     <div class="card-body p-0">
         <div class="table-responsive">
@@ -62,23 +56,33 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($purchaseOrder->products as $item)
-                    <tr>
-                        <td>{{ $item->description ?? 'Product not found' }}</td>
-                        <td>{{ $item->type ?? '-' }}</td>
-                        <td class="text-end">{{ $item->pivot->quantity_ordered ?? 0 }}</td>
-                        <td class="text-end">${{ number_format($item->pivot->price_per_item ?? 0, 2) }}</td>
-                        <td class="text-end">${{ number_format(($item->pivot->price_per_item ?? 0) * ($item->pivot->quantity_ordered ?? 0), 2) }}</td>
-                        <td class="text-end">0</td> <!-- Placeholder for received quantity -->
-                        <td>
-                            <span class="badge bg-warning">Pending</span>
-                        </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="7" class="text-center">No items found for this purchase order.</td>
-                    </tr>
-                    @endforelse
+                    @foreach($purchaseOrder->orderDetails as $detail)
+                        @php
+                            $received = $detail->receivings->sum('quantity_received');
+                            $status = 'Pending';
+                            if ($received == $detail->quantity_ordered) {
+                                $status = 'Received';
+                            } elseif ($received > 0) {
+                                $status = 'Partial';
+                            }
+                        @endphp
+                        <tr>
+                            <td>{{ $detail->product->name ?? 'Product not found' }}</td>
+                            <td>{{ $detail->product->type ?? '-' }}</td>
+                            <td class="text-end">{{ $detail->quantity_ordered }}</td>
+                            <td class="text-end">${{ number_format($detail->price_per_item, 2) }}</td>
+                            <td class="text-end">${{ number_format($detail->price_per_item * $detail->quantity_ordered, 2) }}</td>
+                            <td class="text-end">{{ $received }}</td>
+                            <td>
+                                <span class="badge bg-{{
+                                    $status == 'Pending' ? 'warning' :
+                                    ($status == 'Partial' ? 'info' : 'success')
+                                }}">
+                                    {{ $status }}
+                                </span>
+                            </td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>
@@ -104,7 +108,7 @@
                     @foreach($purchaseOrder->receivings as $receiving)
                     <tr>
                         <td>{{ $receiving->received_date->format('M d, Y') }}</td>
-                        <td>{{ $receiving->orderDetail->product->description ?? 'Product not found' }}</td>
+                        <td>{{ $receiving->orderDetail->product->name ?? 'Product not found' }}</td>
                         <td class="text-end">{{ $receiving->quantity_received }}</td>
                         <td>{{ $receiving->received_by }}</td>
                         <td>{{ $receiving->notes }}</td>

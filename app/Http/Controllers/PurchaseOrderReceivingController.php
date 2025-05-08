@@ -15,7 +15,7 @@ class PurchaseOrderReceivingController extends Controller
     public function index()
     {
         $receivings = PurchaseOrderReceiving::with([
-                'orderDetail.part', 
+                'orderDetail.product', 
                 'orderDetail.purchaseOrder.supplier'
             ])
             ->latest()
@@ -146,5 +146,34 @@ class PurchaseOrderReceivingController extends Controller
             DB::rollBack();
             return back()->withErrors(['error' => 'Failed to delete receiving. ' . $e->getMessage()]);
         }
+    }
+
+    /**
+     * Show all purchase orders for Stock In panel with filter/search.
+     */
+    public function stockInList(Request $request)
+    {
+        $query = \App\Models\PurchaseOrder::with(['supplier', 'orderDetails.product'])
+            ->whereIn('status', ['pending', 'approved', 'partial']);
+
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->where('id', $search)
+                  ->orWhereHas('supplier', function($q2) use ($search) {
+                      $q2->where('name', 'like', "%$search%");
+                  })
+                  ->orWhereHas('orderDetails.product', function($q2) use ($search) {
+                      $q2->where('description', 'like', "%$search%")
+                         ->orWhere('type', 'like', "%$search%")
+                         ->orWhere('name', 'like', "%$search%")
+                         ->orWhere('serial_number', 'like', "%$search%")
+                         ;
+                  });
+            });
+        }
+
+        $purchaseOrders = $query->latest()->paginate(10);
+        return view('receivings.stock-in', compact('purchaseOrders'));
     }
 }

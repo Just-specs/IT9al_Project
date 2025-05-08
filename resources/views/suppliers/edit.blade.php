@@ -6,7 +6,6 @@
 <div class="d-flex align-items-center justify-content-between">
     <h1 class="mb-0">Edit Supplier</h1>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 <hr />
 <form action="{{ route('suppliers.update', $supplier->id) }}" method="POST">

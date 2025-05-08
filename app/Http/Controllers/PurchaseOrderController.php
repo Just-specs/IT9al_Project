@@ -138,7 +138,7 @@ class PurchaseOrderController extends Controller
         }
 
         $purchaseOrder->load(['supplier', 'orderDetails.product', 'orderDetails.receivings']);
-        return view('purchase-orders.receive', compact('purchaseOrder'));
+        return view('receivings.receive', compact('purchaseOrder'));
     }
 
     /**
@@ -157,6 +157,7 @@ class PurchaseOrderController extends Controller
             DB::beginTransaction();
 
             $allReceived = true;
+            $anyReceived = false;
             $totalReceived = 0;
 
             foreach ($request->receivings as $receiving) {
@@ -177,18 +178,24 @@ class PurchaseOrderController extends Controller
                     $product->save();
 
                     $totalReceived += $receiving['quantity_received'];
-
-                    // Check if fully received
-                    $totalReceivedForDetail = $orderDetail->receivings()->sum('quantity_received');
-                    if ($totalReceivedForDetail < $orderDetail->quantity_ordered) {
-                        $allReceived = false;
-                    }
                 }
             }
 
-            // If all items are fully received, update the purchase order status
+            // Check status for all order details
+            foreach ($purchaseOrder->orderDetails as $detail) {
+                $totalReceivedForDetail = $detail->receivings()->sum('quantity_received');
+                if ($totalReceivedForDetail < $detail->quantity_ordered) {
+                    $allReceived = false;
+                }
+                if ($totalReceivedForDetail > 0) {
+                    $anyReceived = true;
+                }
+            }
+
             if ($allReceived && $totalReceived > 0) {
                 $purchaseOrder->update(['status' => 'received']);
+            } elseif ($anyReceived) {
+                $purchaseOrder->update(['status' => 'partial']);
             }
 
             DB::commit();

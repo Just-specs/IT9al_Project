@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('supplier_id')->constrained();
             $table->decimal('total_amount', 10, 2)->default(0);
-            $table->enum('status', ['pending', 'approved', 'completed', 'cancelled'])->default('pending');
+            $table->enum('status', ['pending', 'approved', 'partial', 'received', 'cancelled'])->default('pending');
             $table->timestamps();
         });
     }

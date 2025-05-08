@@ -51,7 +51,8 @@
                             <span class="badge bg-{{ 
                                 $po->status == 'pending' ? 'warning' : 
                                 ($po->status == 'approved' ? 'info' : 
-                                ($po->status == 'received' ? 'success' : 'danger')) 
+                                ($po->status == 'received' ? 'success' : 
+                                ($po->status == 'partial' ? 'info' : 'danger'))) 
                             }}">
                                 {{ ucfirst($po->status) }}
                             </span>
