@@ -44,6 +44,12 @@
     </li>
 
     <li class="nav-item">
+        <a class="nav-link" href="{{ route('inventory-issues') }}">
+            <i class="fas fa-arrow-down"></i>
+            <span>Stock Out</span></a>
+    </li>
+
+    <li class="nav-item">
         <a class="nav-link" href="{{ route('employees') }}">
             <i class="fas fa-users"></i>
             <span>Employees</span></a>

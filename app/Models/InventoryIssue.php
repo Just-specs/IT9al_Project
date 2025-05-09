@@ -10,25 +10,49 @@ class InventoryIssue extends Model
     use HasFactory;
 
     protected $fillable = [
-        'part_id',
-        'employee_id',
+        'product_id',
         'department_id',
-        'quantity_issued',
-        'issue_date'
+        'employee_id',
+        'quantity',
+        'issue_date',
+        'reason',
+        'notes',
+        'issued_by',
     ];
 
+    protected $casts = [
+        'issue_date' => 'date',
+    ];
+
+    /**
+     * Get the product associated with the inventory issue.
+     */
     public function product()
     {
-        return $this->belongsTo(Product::class, 'part_id');
+        return $this->belongsTo(Product::class);
     }
 
+    /**
+     * Get the department associated with the inventory issue.
+     */
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
+    }
+
+    /**
+     * Get the employee associated with the inventory issue.
+     */
     public function employee()
     {
         return $this->belongsTo(Employee::class);
     }
 
-    public function department()
+    /**
+     * Get the user who issued the inventory item.
+     */
+    public function issuedBy()
     {
-        return $this->belongsTo(Department::class);
+        return $this->belongsTo(User::class, 'issued_by');
     }
 }
