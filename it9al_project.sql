@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 09, 2025 at 08:35 PM
+-- Generation Time: May 10, 2025 at 07:49 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -117,9 +117,23 @@ CREATE TABLE `inventory_issues` (
   `department_id` bigint(20) UNSIGNED NOT NULL,
   `quantity_issued` int(11) NOT NULL,
   `issue_date` date NOT NULL,
+  `reason` varchar(255) DEFAULT NULL,
+  `notes` text DEFAULT NULL,
+  `issued_by` bigint(20) UNSIGNED DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `inventory_issues`
+--
+
+INSERT INTO `inventory_issues` (`id`, `product_id`, `employee_id`, `department_id`, `quantity_issued`, `issue_date`, `reason`, `notes`, `issued_by`, `created_at`, `updated_at`) VALUES
+(1, 15, 1, 1, 12, '2025-05-10', 'asd', 'asd', NULL, '2025-05-09 20:55:07', '2025-05-09 20:55:07'),
+(2, 15, 1, 1, 15, '2025-05-10', '123', '123', 2, '2025-05-09 21:07:13', '2025-05-09 21:07:13'),
+(3, 15, 1, 1, 12, '2025-05-10', '123', '123', 2, '2025-05-09 21:08:10', '2025-05-09 21:08:10'),
+(4, 15, 1, 1, 3, '2025-05-10', 'sda', 'asd', 2, '2025-05-09 21:09:03', '2025-05-09 21:09:03'),
+(5, 15, 1, 1, 4, '2025-05-10', '123', '231', 2, '2025-05-09 21:20:15', '2025-05-09 21:20:15');
 
 -- --------------------------------------------------------
 
@@ -191,7 +205,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (16, '2025_05_05_999999_update_order_details_foreign_key', 4),
 (17, '2025_05_05_999998_remove_supplier_id_from_products', 5),
 (18, '2025_05_06_051238_add_price_per_item_to_order_details_table', 6),
-(19, '2025_05_06_054614_create_product_supplier_table', 7);
+(19, '2025_05_06_054614_create_product_supplier_table', 7),
+(20, '2025_05_10_040721_add_reason_and_notes_to_inventory_issues_table', 8),
+(21, '2025_05_10_050552_add_issued_by_to_inventory_issues_table', 9);
 
 -- --------------------------------------------------------
 
@@ -282,7 +298,7 @@ INSERT INTO `products` (`id`, `name`, `description`, `type`, `quantity`, `price_
 (12, '12312312', '123213', 'Storage', 123, 123123.00, 5, 'SN-6819A8CC17C62', '1231231', 'available', '2025-05-05 22:14:36', '2025-05-05 22:14:36'),
 (13, '23123', '123', 'CPU', 1232, 241.00, 5, 'SN-6819A8DA186CC', '123', 'available', '2025-05-05 22:14:50', '2025-05-05 22:14:50'),
 (14, '12312312312', '141241', 'RAM', 12412422, 124122.00, 5, 'SN-6819ADC26C773', '12412412', 'available', '2025-05-05 22:35:46', '2025-05-08 07:36:17'),
-(15, 'ROG', 'BEST!', 'CPU', 70, 5.00, 5, 'SN-681CD1FE2D787', 'kigwa', 'available', '2025-05-08 07:47:10', '2025-05-08 09:52:43');
+(15, 'ROG', 'BEST!', 'CPU', 21, 5.00, 5, 'SN-681CD1FE2D787', 'kigwa', 'available', '2025-05-08 07:47:10', '2025-05-09 21:20:15');
 
 -- --------------------------------------------------------
 
@@ -411,8 +427,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('FQvmZbyt68ZetABmsgr76xiTKnImKFW6DrJyj17w', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiTjJhcTBBUXd1Y0M0RWpzZEgyMWVhQ2hEenRpdVg4eFZ5MlF1a2F3MyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MjtzOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czozMDoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL3N0b2NrLWluIjt9fQ==', 1746727523),
-('whbKxcqQTbUcPnmxSD2JEbQgjjtPj9HnDLvGa4RK', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiOEcyMTFtVzZ2Tmh3ZDRTS3l0eWFEQmVPOU9DSnNlNFN2aWl3bXRGUSI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDU6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9pbnZlbnRvcnktaXNzdWVzL2NyZWF0ZSI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjI7fQ==', 1746815441);
+('tx8rdhplsKUYBDQxN1XSN4TSVvXJ5aB2QCTpeEuV', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiWGJKckdmVlh2Tk5mN1FuSkVENHQ3azRHSGg3WFV4ck5hTm10VmhoUyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MjtzOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czozODoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2ludmVudG9yeS1pc3N1ZXMiO319', 1746856071);
 
 -- --------------------------------------------------------
 
@@ -650,7 +665,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `inventory_issues`
 --
 ALTER TABLE `inventory_issues`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `jobs`
@@ -662,7 +677,7 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `order_details`

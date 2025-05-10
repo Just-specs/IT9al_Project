@@ -112,6 +112,7 @@ Route::middleware('auth')->group(function () {
         Route::get('create', 'create')->name('inventory-issues.create');
         Route::post('store', 'store')->name('inventory-issues.store');
         Route::get('show/{id}', 'show')->name('inventory-issues.show');
+        Route::get('/inventory-issues', [InventoryIssueController::class, 'index'])->name('inventory-issues.index');
     });
 
     

@@ -13,7 +13,7 @@ class InventoryIssue extends Model
         'product_id',
         'department_id',
         'employee_id',
-        'quantity',
+        'quantity_issued',
         'issue_date',
         'reason',
         'notes',
@@ -46,13 +46,5 @@ class InventoryIssue extends Model
     public function employee()
     {
         return $this->belongsTo(Employee::class);
-    }
-
-    /**
-     * Get the user who issued the inventory item.
-     */
-    public function issuedBy()
-    {
-        return $this->belongsTo(User::class, 'issued_by');
     }
 }

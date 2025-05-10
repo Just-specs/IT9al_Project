@@ -107,33 +107,4 @@
     </div>
 </div>
 
-<!-- Item History & Assignments (to be implemented) -->
-<div class="row">
-    <div class="col-md-12 mb-3">
-        <div class="card">
-            <div class="card-header bg-primary text-white">
-                Item History & Assignments
-            </div>
-            <div class="card-body">
-                <!-- Add tabs for history, assignments, etc. -->
-                <ul class="nav nav-tabs" id="itemTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="assignments-tab" data-bs-toggle="tab" data-bs-target="#assignments" type="button" role="tab" aria-controls="assignments" aria-selected="true">Assignments</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="history-tab" data-bs-toggle="tab" data-bs-target="#history" type="button" role="tab" aria-controls="history" aria-selected="false">Stock History</button>
-                    </li>
-                </ul>
-                <div class="tab-content p-3" id="itemTabsContent">
-                    <div class="tab-pane fade show active" id="assignments" role="tabpanel" aria-labelledby="assignments-tab">
-                        <p>No assignment records found for this item.</p>
-                    </div>
-                    <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
-                        <p>No stock history records found for this item.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 @endsection

@@ -13,14 +13,19 @@ return new class extends Migration
     {
         Schema::create('inventory_issues', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('part_id');
-            $table->foreignId('employee_id')->constrained();
-            $table->foreignId('department_id')->constrained();
+            $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('department_id');
+            $table->unsignedBigInteger('employee_id');
             $table->integer('quantity_issued');
             $table->date('issue_date');
+            $table->string('reason')->nullable();
+            $table->text('notes')->nullable();
+            $table->unsignedBigInteger('issued_by')->nullable();
             $table->timestamps();
-            
-            $table->foreign('part_id')->references('id')->on('products');
+
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
+            $table->foreign('employee_id')->references('id')->on('employees')->onDelete('cascade');
         });
     }
 

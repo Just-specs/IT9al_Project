@@ -1,6 +1,5 @@
 @extends('layouts.app')
 
-@section('title', 'View Inventory Issue')
 
 @section('contents')
 <div class="container-fluid">
@@ -38,8 +37,8 @@
                                 <div class="col-md-8">{{ $inventoryIssue->product->id }}</div>
                             </div>
                             <div class="row mb-3">
-                                <div class="col-md-4 font-weight-bold">Category:</div>
-                                <div class="col-md-8">{{ $inventoryIssue->product->category ?? 'N/A' }}</div>
+                                <div class="col-md-4 font-weight-bold">Type:</div>
+                                <div class="col-md-8">{{ $inventoryIssue->product->type ?? 'N/A' }}</div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-4 font-weight-bold">Description:</div>
@@ -57,7 +56,7 @@
                         <div class="card-body">
                             <div class="row mb-3">
                                 <div class="col-md-4 font-weight-bold">Quantity Issued:</div>
-                                <div class="col-md-8">{{ $inventoryIssue->quantity }}</div>
+                                <div class="col-md-8">{{ $inventoryIssue->quantity_issued }}</div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-4 font-weight-bold">Issue Date:</div>
@@ -69,7 +68,7 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-4 font-weight-bold">Issued By:</div>
-                                <div class="col-md-8">{{ $inventoryIssue->issuedBy->name ?? 'N/A' }}</div>
+                                <div class="col-md-8">{{ \App\Models\User::find($inventoryIssue->issued_by)?->name ?? 'N/A' }}</div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-4 font-weight-bold">Created At:</div>
