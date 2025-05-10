@@ -19,7 +19,7 @@ class PurchaseOrderController extends Controller
         $purchaseOrders = PurchaseOrder::with('supplier')
             ->latest()
             ->paginate(10);
-            
+
         return view('purchase-orders.index', compact('purchaseOrders'));
     }
 
@@ -66,7 +66,8 @@ class PurchaseOrderController extends Controller
             foreach ($request->products as $product) {
                 $productModel = Product::find($product['id']);
                 OrderDetail::create([
-                    'part_id' => $product['id'],
+                    'product_id' => $product['id'],
+                    'product_name' => $productModel->name, // Added product_name field
                     'purchase_order_id' => $purchaseOrder->id,
                     'quantity_ordered' => $product['quantity'],
                     'price_per_item' => $productModel->price_per_item,
@@ -78,7 +79,6 @@ class PurchaseOrderController extends Controller
 
             return redirect()->route('purchase-orders.index')
                 ->with('success', 'Purchase order created successfully.');
-                
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors(['error' => 'Failed to create purchase order. ' . $e->getMessage()]);
@@ -164,7 +164,7 @@ class PurchaseOrderController extends Controller
                 if ($receiving['quantity_received'] > 0) {
                     // Create receiving record
                     $orderDetail = OrderDetail::findOrFail($receiving['order_detail_id']);
-                    
+
                     $orderDetail->receivings()->create([
                         'received_date' => now(),
                         'quantity_received' => $receiving['quantity_received'],
@@ -202,7 +202,6 @@ class PurchaseOrderController extends Controller
 
             return redirect()->route('purchase-orders.show', $purchaseOrder)
                 ->with('success', 'Items received successfully.');
-                
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors(['error' => 'Failed to process receiving. ' . $e->getMessage()]);
