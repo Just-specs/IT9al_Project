@@ -60,6 +60,11 @@
             <i class="fas fa-building"></i>
             <span>Departments</span></a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('reports') }}">
+            <i class="fas fa-building"></i>
+            <span>Reports</span></a>
+    </li>
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">

@@ -73,7 +73,7 @@ Route::middleware('auth')->group(function () {
 
     // Employee Routes
     Route::controller(EmployeeController::class)->prefix('employees')->group(function () {
-        Route::get('', 'index')->name('employees');
+        Route::get('', 'index')->name('employees');  // Changed back to original 'employees' name
         Route::get('create', 'create')->name('employees.create');
         Route::post('store', 'store')->name('employees.store');
         Route::get('show/{id}', 'show')->name('employees.show');
@@ -91,7 +91,7 @@ Route::middleware('auth')->group(function () {
         Route::get('{purchaseOrder}/edit', 'edit')->name('purchase-orders.edit');
         Route::put('{purchaseOrder}', 'update')->name('purchase-orders.update');
         Route::delete('{purchaseOrder}', 'destroy')->name('purchase-orders.destroy');
-        
+
         Route::get('generate/low-stock', 'generateForLowStock')->name('purchase-orders.generate-low-stock');
         Route::patch('{purchaseOrder}/status', 'updateStatus')->name('purchase-orders.update-status');
         Route::get('{purchaseOrder}/receive', 'showReceiveForm')->name('purchase-orders.receive-form');
@@ -115,17 +115,17 @@ Route::middleware('auth')->group(function () {
         Route::get('/inventory-issues', [InventoryIssueController::class, 'index'])->name('inventory-issues.index');
     });
 
-    
+
 
     // Reports Routes
     Route::controller(ReportController::class)->prefix('reports')->group(function () {
         Route::get('', 'index')->name('reports');
-        Route::get('stock-level', 'stockLevel')->name('reports.stock-level');
-        Route::get('inventory-assignments', 'inventoryAssignments')->name('reports.inventory-assignments');
-        Route::get('purchase-history', 'purchaseHistory')->name('reports.purchase-history');
-        Route::get('low-stock', 'lowStock')->name('reports.low-stock');
-        Route::get('generate-pdf/{type}', 'generatePdf')->name('reports.generate-pdf');
+        Route::get('create', 'create')->name('reports.create');
+        Route::post('store', 'store')->name('reports.store');
+        Route::get('show/{id}', 'show')->name('reports.show');
+        Route::delete('destroy/{id}', 'destroy')->name('reports.destroy');
     });
+
 
     Route::get('/profile', [App\Http\Controllers\AuthController::class, 'profile'])->name('profile');
 });
@@ -133,4 +133,3 @@ Route::middleware('auth')->group(function () {
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 
 Route::get('/suppliers/for-product', [App\Http\Controllers\SupplierController::class, 'suppliersForProduct'])->name('suppliers.for-product');
-

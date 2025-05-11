@@ -23,7 +23,6 @@ class EmployeeController extends Controller
      */
     public function create()
     {
-
         $departments = Department::all();
         return view('employees.create', compact('departments'));
     }
@@ -41,7 +40,7 @@ class EmployeeController extends Controller
 
         Employee::create($validated);
 
-        return redirect()->route('employees.index')->with('success', 'Employee added successfully.');
+        return redirect()->route('employees')->with('success', 'Employee added successfully.');
     }
 
     /**
@@ -78,7 +77,7 @@ class EmployeeController extends Controller
 
         $employee->update($validated);
 
-        return redirect()->route('employees.index')->with('success', 'Employee updated successfully.');
+        return redirect()->route('employees')->with('success', 'Employee updated successfully.');
     }
 
     /**
@@ -89,6 +88,6 @@ class EmployeeController extends Controller
         $employee = Employee::findOrFail($id);
         $employee->delete();
 
-        return redirect()->route('employees.index')->with('success', 'Employee deleted successfully.');
+        return redirect()->route('employees')->with('success', 'Employee deleted successfully.');
     }
 }
