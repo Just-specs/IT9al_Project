@@ -37,6 +37,8 @@ Route::get('logout', [AuthController::class, 'logout'])->middleware('auth')->nam
 Route::middleware('auth')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    Route::get('empployee/dashboard', [DashboardController::class, 'employeeDashboard'])->name('employee.dashboard');
+
     // Products Routes
     Route::controller(ProductController::class)->prefix('products')->group(function () {
         Route::get('', 'index')->name('products');
@@ -91,7 +93,7 @@ Route::middleware('auth')->group(function () {
         Route::get('{purchaseOrder}/edit', 'edit')->name('purchase-orders.edit');
         Route::put('{purchaseOrder}', 'update')->name('purchase-orders.update');
         Route::delete('{purchaseOrder}', 'destroy')->name('purchase-orders.destroy');
-        
+
         Route::get('generate/low-stock', 'generateForLowStock')->name('purchase-orders.generate-low-stock');
         Route::patch('{purchaseOrder}/status', 'updateStatus')->name('purchase-orders.update-status');
         Route::get('{purchaseOrder}/receive', 'showReceiveForm')->name('purchase-orders.receive-form');
@@ -115,7 +117,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/inventory-issues', [InventoryIssueController::class, 'index'])->name('inventory-issues.index');
     });
 
-    
+
 
     // Reports Routes
     Route::controller(ReportController::class)->prefix('reports')->group(function () {
@@ -133,4 +135,3 @@ Route::middleware('auth')->group(function () {
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 
 Route::get('/suppliers/for-product', [App\Http\Controllers\SupplierController::class, 'suppliersForProduct'])->name('suppliers.for-product');
-

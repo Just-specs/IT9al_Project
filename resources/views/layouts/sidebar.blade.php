@@ -48,7 +48,7 @@
             <i class="fas fa-arrow-down"></i>
             <span>Stock Out</span></a>
     </li>
-
+    @if(Auth::user()->role == 'admin')
     <li class="nav-item">
         <a class="nav-link" href="{{ route('employees') }}">
             <i class="fas fa-users"></i>
@@ -60,7 +60,7 @@
             <i class="fas fa-building"></i>
             <span>Departments</span></a>
     </li>
-
+    @endif
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
 

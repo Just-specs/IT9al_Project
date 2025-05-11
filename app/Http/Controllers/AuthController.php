@@ -28,7 +28,7 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'level' => 'Admin'
+            'role' => 'employee'
         ]);
 
         return redirect()->route('login');
@@ -53,6 +53,12 @@ class AuthController extends Controller
         }
 
         $request->session()->regenerate();
+        $user = Auth::user();
+        if ($user->role == 'admin') {
+            return redirect()->route('dashboard');
+        } elseif ($user->role == 'employee') {
+            return redirect()->route('employee.dashboard');
+        }
 
         return redirect()->route('dashboard');
     }
