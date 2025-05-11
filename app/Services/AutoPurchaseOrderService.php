@@ -94,7 +94,7 @@ class AutoPurchaseOrderService
                     $orderQuantity = ($product->min_stock_level - $product->quantity) + 5;
                     
                     OrderDetail::create([
-                        'part_id' => $product->id,
+                        'product_id' => $product->id,
                         'purchase_order_id' => $purchaseOrder->id,
                         'quantity_ordered' => $orderQuantity,
                         'price_per_item' => $product->price_per_item,

@@ -29,12 +29,12 @@ class Product extends Model
 
     public function inventoryIssues()
     {
-        return $this->hasMany(InventoryIssue::class, 'part_id');
+        return $this->hasMany(InventoryIssue::class, 'product_id');
     }
 
     public function orderDetails()
     {
-        return $this->hasMany(OrderDetail::class, 'part_id');
+        return $this->hasMany(OrderDetail::class, 'product_id');
     }
 
     public function suppliers()

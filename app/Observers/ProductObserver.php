@@ -35,7 +35,7 @@ class ProductObserver
                 $existingdraftPO = PurchaseOrder::where('status', 'draft')
                     ->where('supplier_id', $supplierId)
                     ->whereHas('orderDetails', function($query) use ($product) {
-                        $query->where('part_id', $product->id);
+                        $query->where('product_id', $product->id);
                     })
                     ->exists();
 

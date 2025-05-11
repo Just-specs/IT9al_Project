@@ -73,7 +73,7 @@ class PurchaseOrderController extends Controller
             foreach ($request->products as $product) {
                 $productModel = Product::find($product['id']);
                 OrderDetail::create([
-                    'part_id' => $product['id'],
+                    'product_id' => $product['id'],
                     'purchase_order_id' => $purchaseOrder->id,
                     'quantity_ordered' => $product['quantity'],
                     'price_per_item' => $productModel->price_per_item,

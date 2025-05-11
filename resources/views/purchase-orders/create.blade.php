@@ -29,18 +29,6 @@
             <form action="{{ route('purchase-orders.store') }}" method="POST" id="poForm">
                 @csrf
 
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="supplier_id">Supplier:</label>
-                            <select name="supplier_id" id="supplier_id" class="form-control" required disabled>
-                                <option value="">Select Supplier</option>
-                            </select>
-                            <small id="supplier-helper" class="text-muted">Please select a product first.</small>
-                        </div>
-                    </div>
-                </div>
-
                 <h5 class="mt-4 mb-3">Order Items</h5>
 
                 <div class="table-responsive mb-3">
@@ -72,7 +60,21 @@
                         
                     </table>
                 </div>
-                
+
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="supplier_id">Supplier:</label>
+                            <select name="supplier_id" id="supplier_id" class="form-control" required disabled>
+                                <option value="">Select Supplier</option>
+                            </select>
+                            <small id="supplier-helper" class="text-muted">Please select a product first.</small>
+                        </div>
+                    </div>
+                </div>
+
+        
                 <div class="row">
                     <div class="col-md-12 text-end">
                         <button type="submit" class="btn btn-primary">
@@ -86,7 +88,6 @@
 </div>
 
 <script>
-console.log('Script loaded');
     document.addEventListener('DOMContentLoaded', function() {
     const productSelect = document.querySelector('.product-select');
     const supplierSelect = document.getElementById('supplier_id');

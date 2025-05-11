@@ -12,7 +12,7 @@ class OrderDetail extends Model
     use HasFactory;
 
     protected $fillable = [
-        'part_id',
+        'product_id',
         'purchase_order_id',
         'quantity_ordered',
         'order_date',
@@ -28,7 +28,7 @@ class OrderDetail extends Model
      */
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class, 'part_id');
+        return $this->belongsTo(Product::class, 'product_id');
     }
 
     /**
