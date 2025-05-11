@@ -109,7 +109,8 @@ Route::middleware('auth')->group(function () {
     Route::post('order-details/{orderDetail}/receivings', [PurchaseOrderReceivingController::class, 'store'])->name('receivings.store');
     Route::get('receivings/{receiving}', [PurchaseOrderReceivingController::class, 'show'])->name('receivings.show');
     Route::delete('receivings/{receiving}', [PurchaseOrderReceivingController::class, 'destroy'])->name('receivings.destroy');
-    Route::get('receivings/{purchaseOrder}/receive', [PurchaseOrderController::class, 'showReceiveForm'])->name('receivings.receive-form');
+    Route::get('receivings/{purchaseOrder}/receive', [PurchaseOrderReceivingController::class, 'showReceiveForm'])->name('receivings.receive-form');
+    Route::post('receivings/{purchaseOrder}/receive', [PurchaseOrderReceivingController::class, 'processReceive'])->name('receivings.process-receive');
     Route::get('stock-in', [PurchaseOrderReceivingController::class, 'stockInList'])->name('stock-in.index');
     // Inventory Issue Routes
     Route::controller(InventoryIssueController::class)->prefix('inventory-issues')->group(function () {

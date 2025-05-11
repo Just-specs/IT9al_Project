@@ -24,10 +24,9 @@ class PurchaseOrderController extends Controller
         }
 
         $purchaseOrders = $query->with('supplier')->orderBy('created_at', 'desc')->paginate(10);
-            
-         $draftCount = PurchaseOrder::where('status', 'draft')->count();    
-            
-          return view('purchase-orders.index', compact('purchaseOrders', 'draftCount'));
+        $draftCount = PurchaseOrder::where('status', 'draft')->count();
+
+        return view('purchase-orders.index', compact('purchaseOrders', 'draftCount'));
     }
 
     /**
@@ -85,21 +84,23 @@ class PurchaseOrderController extends Controller
 
             return redirect()->route('purchase-orders.index')
                 ->with('success', 'Purchase order created successfully.');
-                
         } catch (\Exception $e) {
             DB::rollBack();
             return back()->withErrors(['error' => 'Failed to create purchase order. ' . $e->getMessage()]);
         }
     }
 
+    /**
+     * Edit a purchase order.
+     */
     public function edit($id)
-{
-    $purchaseOrder = PurchaseOrder::findOrFail($id);
-    
-    $suppliers = Supplier::all();
-    
-    return view('purchase-orders.edit', compact('purchaseOrder', 'suppliers'));
-}
+    {
+        $purchaseOrder = PurchaseOrder::findOrFail($id);
+        $suppliers = Supplier::all();
+
+        return view('purchase-orders.edit', compact('purchaseOrder', 'suppliers'));
+    }
+
     /**
      * Display the specified purchase order.
      */
@@ -112,18 +113,17 @@ class PurchaseOrderController extends Controller
     /**
      * Update the status of a purchase order.
      */
-    public function updateStatus(Request $request, PurchaseOrder $purchaseOrder)
+    public function updateStatus(Request $request, $id)
     {
-        $request->validate([
-            'status' => 'required|in:pending,approved,received,cancelled',
-        ]);
+        $purchaseOrder = PurchaseOrder::findOrFail($id);
 
-        $purchaseOrder->update([
-            'status' => $request->status,
-        ]);
+        if ($purchaseOrder->status == 'pending') {
+            $purchaseOrder->update(['status' => $request->status]);
 
-        return redirect()->route('purchase-orders.show', $purchaseOrder)
-            ->with('success', 'Purchase order status updated successfully.');
+            return redirect()->back()->with('success', 'Purchase order approved successfully.');
+        }
+
+        return redirect()->back()->with('error', 'Invalid status update.');
     }
 
     /**
@@ -140,99 +140,6 @@ class PurchaseOrderController extends Controller
 
         return redirect()->route('purchase-orders.index')
             ->with('success', 'Purchase order deleted successfully.');
-    }
-
-    /**
-     * Show form for receiving items from a purchase order.
-     */
-    public function showReceiveForm(PurchaseOrder $purchaseOrder)
-    {
-        if ($purchaseOrder->status !== 'approved') {
-            return redirect()->route('purchase-orders.show', $purchaseOrder)
-                ->withErrors(['error' => 'Only approved purchase orders can receive items.']);
-        }
-
-        $purchaseOrder->load(['supplier', 'orderDetails.product', 'orderDetails.receivings']);
-        return view('receivings.receive', compact('purchaseOrder'));
-    }
-
-    /**
-     * Process receiving items for a purchase order.
-     */
-    public function processReceive(Request $request, PurchaseOrder $purchaseOrder)
-    {
-        $request->validate([
-            'receivings' => 'required|array',
-            'receivings.*.order_detail_id' => 'required|exists:order_details,id',
-            'receivings.*.quantity_received' => 'required|integer|min:1',
-            'received_by' => 'required|string',
-        ]);
-
-        try {
-            DB::beginTransaction();
-
-            $allReceived = true;
-            $anyReceived = false;
-            $totalReceived = 0;
-
-            foreach ($request->receivings as $receiving) {
-                if ($receiving['quantity_received'] > 0) {
-                    // Create receiving record
-                    $orderDetail = OrderDetail::findOrFail($receiving['order_detail_id']);
-                    
-                    $orderDetail->receivings()->create([
-                        'received_date' => now(),
-                        'quantity_received' => $receiving['quantity_received'],
-                        'received_by' => $request->received_by,
-                        'notes' => $receiving['notes'] ?? null,
-                    ]);
-
-                    // Update inventory quantity
-                    $product = $orderDetail->product;
-                    $product->quantity += $receiving['quantity_received'];
-                    $product->save();
-
-                    $totalReceived += $receiving['quantity_received'];
-                }
-            }
-
-            // Check status for all order details
-            foreach ($purchaseOrder->orderDetails as $detail) {
-                $totalReceivedForDetail = $detail->receivings()->sum('quantity_received');
-                if ($totalReceivedForDetail < $detail->quantity_ordered) {
-                    $allReceived = false;
-                }
-                if ($totalReceivedForDetail > 0) {
-                    $anyReceived = true;
-                }
-            }
-
-            if ($allReceived && $totalReceived > 0) {
-                $purchaseOrder->update(['status' => 'received']);
-            } elseif ($anyReceived) {
-                $purchaseOrder->update(['status' => 'partial']);
-            }
-
-            DB::commit();
-
-            return redirect()->route('purchase-orders.show', $purchaseOrder)
-                ->with('success', 'Items received successfully.');
-                
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return back()->withErrors(['error' => 'Failed to process receiving. ' . $e->getMessage()]);
-        }
-    }
-
-    /**
-     * Generate purchase orders for low stock items.
-     */
-    public function generateForLowStock()
-    {
-        $lowStockParts = Product::whereRaw('quantity <= min_stock_level')->get();
-        $suppliers = Supplier::all();
-
-        return view('purchase-orders.generate-low-stock', compact('lowStockParts', 'suppliers'));
     }
 
     /**

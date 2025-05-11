@@ -15,7 +15,7 @@
                         <th>Supplier</th>
                         <th>Date</th>
                         <th>Status</th>
-                        <th>Product</th>
+                        <th>Product Details</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -43,11 +43,11 @@
                             </ul>
                         </td>
                         <td>
-                        <a href="{{ route('purchase-orders.show', $po->id) }}" class="btn btn-info btn-sm me-1">
-                                  <i class="fa fa-eye"></i> View
-                                </a>
+                            <a href="{{ route('purchase-orders.show', $po->id) }}" class="btn btn-info btn-sm me-1">
+                                <i class="fa fa-eye"></i> View
+                            </a>
                             @if($po->status == 'pending')
-                                <form action="{{ route('purchase-orders.update-status', $po->id) }}" method="POST" style="display:inline-block;">
+                                <form action="{{ route('purchase-orders.update-status', $po->id) }}" method="POST" style="display: inline;">
                                     @csrf
                                     @method('PATCH')
                                     <input type="hidden" name="status" value="approved">
@@ -71,4 +71,4 @@
         {!! $purchaseOrders->links() !!}
     </div>
 </div>
-@endsection 
+@endsection

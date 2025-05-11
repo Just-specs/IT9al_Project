@@ -11,7 +11,7 @@
         </ul>
     </div>
 @endif
-<form action="{{ route('purchase-orders.process-receive', $purchaseOrder->id) }}" method="POST">
+<form action="{{ route('receivings.process-receive', $purchaseOrder->id) }}" method="POST">
     @csrf
     <div class="table-responsive mb-3">
         <table class="table table-bordered">
@@ -55,4 +55,4 @@
     <button type="submit" class="btn btn-success">Confirm</button>
     <a href="{{ route('purchase-orders.show', $purchaseOrder->id) }}" class="btn btn-secondary">Cancel</a>
 </form>
-@endsection 
+@endsection

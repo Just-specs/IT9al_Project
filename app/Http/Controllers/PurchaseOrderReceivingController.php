@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\OrderDetail;
+use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderReceiving;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -175,5 +176,87 @@ class PurchaseOrderReceivingController extends Controller
 
         $purchaseOrders = $query->latest()->paginate(10);
         return view('receivings.stock-in', compact('purchaseOrders'));
+    }
+
+    /**
+     * Show the form to receive items for a purchase order.
+     */
+    public function showReceiveForm(PurchaseOrder $purchaseOrder)
+    {
+        if ($purchaseOrder->status !== 'approved') {
+            return redirect()->route('purchase-orders.show', $purchaseOrder)
+                ->withErrors(['error' => 'Only approved purchase orders can receive items.']);
+        }
+
+        $purchaseOrder->load(['supplier', 'orderDetails.product', 'orderDetails.receivings']);
+        return view('receivings.receive', compact('purchaseOrder'));
+    }
+
+    /**
+     * Process the receiving of items for a purchase order.
+     */
+    public function processReceive(Request $request, PurchaseOrder $purchaseOrder)
+    {
+        $request->validate([
+            'receivings' => 'required|array',
+            'receivings.*.order_detail_id' => 'required|exists:order_details,id',
+            'receivings.*.quantity_received' => 'required|integer|min:1',
+            'received_by' => 'required|string',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $allReceived = true;
+            $anyReceived = false;
+            $totalReceived = 0;
+
+            foreach ($request->receivings as $receiving) {
+                if ($receiving['quantity_received'] > 0) {
+                    // Create receiving record
+                    $orderDetail = OrderDetail::findOrFail($receiving['order_detail_id']);
+                    
+                    $orderDetail->receivings()->create([
+                        'received_date' => now(),
+                        'quantity_received' => $receiving['quantity_received'],
+                        'received_by' => $request->received_by,
+                        'notes' => $receiving['notes'] ?? null,
+                    ]);
+
+                    // Update inventory quantity
+                    $product = $orderDetail->product;
+                    $product->quantity += $receiving['quantity_received'];
+                    $product->save();
+
+                    $totalReceived += $receiving['quantity_received'];
+                }
+            }
+
+            // Check status for all order details
+            foreach ($purchaseOrder->orderDetails as $detail) {
+                $totalReceivedForDetail = $detail->receivings()->sum('quantity_received');
+                if ($totalReceivedForDetail < $detail->quantity_ordered) {
+                    $allReceived = false;
+                }
+                if ($totalReceivedForDetail > 0) {
+                    $anyReceived = true;
+                }
+            }
+
+            if ($allReceived && $totalReceived > 0) {
+                $purchaseOrder->update(['status' => 'received']);
+            } elseif ($anyReceived) {
+                $purchaseOrder->update(['status' => 'partial']);
+            }
+
+            DB::commit();
+
+            return redirect()->route('purchase-orders.show', $purchaseOrder)
+                ->with('success', 'Items received successfully.');
+                
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return back()->withErrors(['error' => 'Failed to process receiving. ' . $e->getMessage()]);
+        }
     }
 }
