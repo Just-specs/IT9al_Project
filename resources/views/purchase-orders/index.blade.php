@@ -6,17 +6,22 @@
 <div class="mb-4 d-flex justify-content-between align-items-center">
     <h2>Purchase Orders</h2>
     <div class="d-flex align-items-center">
-        <div class="dropdown me-2">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="poMenuButton" data-toggle="dropdown" aria-expanded="false">
-                <i class="fa fa-cog"></i> Options
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="poMenuButton">
-                <li><a class="dropdown-item" href="{{ route('purchase-orders.generate-low-stock') }}">Generate for Low Stock</a></li>
-            </ul>
-        </div>
-        <a href="{{ route('purchase-orders.create') }}" class="btn btn-primary">
-            <i class="fa fa-plus"></i> New Purchase Order
-        </a>
+        <form action="{{ route('purchase-orders.index') }}" method="GET" class="d-flex">
+            <div class="input-group">
+                <select name="status" class="form-control" onchange="this.form.submit()">
+                    <option value="">All Statuses</option>
+                    <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
+                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                    <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Approved</option>
+                    <option value="received" {{ request('status') == 'received' ? 'selected' : '' }}>Received</option>
+                    <option value="partial" {{ request('status') == 'partial' ? 'selected' : '' }}>Partial</option>
+                    <option value="cancelled" {{ request('status') == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                </select>
+                <a href="{{ route('purchase-orders.create') }}" class="btn btn-primary">
+                    <i class="fa fa-plus"></i> New Purchase Order
+                </a>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -62,6 +67,11 @@
                                 <a href="{{ route('purchase-orders.show', $po->id) }}" class="btn btn-info btn-sm me-1">
                                     <i class="fa fa-eye"></i> View
                                 </a>
+                                @if ($po->status == 'draft') <!-- Allow editing only if the status is 'draft' -->
+                                <a href="{{ route('purchase-orders.edit', $po->id) }}" class="btn btn-warning btn-sm me-1">
+                                    <i class="fa fa-edit"></i> Edit
+                                </a>
+                                @endif
                                 @if ($po->status == 'pending')
                                 <form action="{{ route('purchase-orders.destroy', $po->id) }}" method="POST">
                                     @csrf

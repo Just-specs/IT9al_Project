@@ -14,13 +14,20 @@ class PurchaseOrderController extends Controller
     /**
      * Display a listing of the purchase orders.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $purchaseOrders = PurchaseOrder::with('supplier')
-            ->latest()
-            ->paginate(10);
+        $query = PurchaseOrder::query();
+
+        // Filter by status if provided
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+        $purchaseOrders = $query->with('supplier')->orderBy('created_at', 'desc')->paginate(10);
             
-        return view('purchase-orders.index', compact('purchaseOrders'));
+         $draftCount = PurchaseOrder::where('status', 'draft')->count();    
+            
+          return view('purchase-orders.index', compact('purchaseOrders', 'draftCount'));
     }
 
     /**
@@ -85,6 +92,14 @@ class PurchaseOrderController extends Controller
         }
     }
 
+    public function edit($id)
+{
+    $purchaseOrder = PurchaseOrder::findOrFail($id);
+    
+    $suppliers = Supplier::all();
+    
+    return view('purchase-orders.edit', compact('purchaseOrder', 'suppliers'));
+}
     /**
      * Display the specified purchase order.
      */
@@ -218,5 +233,48 @@ class PurchaseOrderController extends Controller
         $suppliers = Supplier::all();
 
         return view('purchase-orders.generate-low-stock', compact('lowStockParts', 'suppliers'));
+    }
+
+    /**
+     * Update the specified purchase order in storage.
+     */
+    public function update(Request $request, PurchaseOrder $purchaseOrder)
+    {
+        $validated = $request->validate([
+            'supplier_id' => 'required|exists:suppliers,id',
+            'status' => 'required|in:draft,pending,completed,cancelled',
+            'order_details.*.quantity_ordered' => 'nullable|integer|min:1', // Validate order details if provided
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            // Update the purchase order
+            $purchaseOrder->update([
+                'supplier_id' => $validated['supplier_id'],
+                'status' => $validated['status'],
+            ]);
+
+            // If the status is 'draft', update the order details
+            if ($purchaseOrder->status == 'draft' && isset($validated['order_details'])) {
+                foreach ($validated['order_details'] as $detailId => $detailData) {
+                    $orderDetail = $purchaseOrder->orderDetails()->find($detailId);
+                    if ($orderDetail) {
+                        $orderDetail->update([
+                            'quantity_ordered' => $detailData['quantity_ordered'],
+                        ]);
+                    }
+                }
+            }
+
+            DB::commit();
+
+            return redirect()->route('purchase-orders.index')
+                ->with('success', 'Purchase order updated successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->withErrors(['error' => 'Failed to update purchase order: ' . $e->getMessage()]);
+        }
     }
 }

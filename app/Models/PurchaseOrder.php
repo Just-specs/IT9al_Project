@@ -44,4 +44,12 @@ class PurchaseOrder extends Model
     {
         return $this->hasMany(PurchaseOrderReceiving::class, 'order_detail_id');
     }
+    
+    /**
+     * Scope a query to only include draft purchase orders.
+     */
+    public function scopeDraft($query)
+    {
+        return $query->where('status', 'draft');
+    }
 }

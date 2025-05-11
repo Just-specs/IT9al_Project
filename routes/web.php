@@ -94,7 +94,10 @@ Route::middleware('auth')->group(function () {
         Route::put('{purchaseOrder}', 'update')->name('purchase-orders.update');
         Route::delete('{purchaseOrder}', 'destroy')->name('purchase-orders.destroy');
 
-        Route::get('generate/low-stock', 'generateForLowStock')->name('purchase-orders.generate-low-stock');
+        Route::get('purchase-orders/generate-low-stock', [PurchaseOrderController::class, 'generateLowStockOrder'])
+         ->name('purchase-orders.generate-low-stock');
+         Route::get('/auto-purchase-orders/generate', [App\Http\Controllers\AutoPurchaseOrderController::class, 'generateDrafts'])
+    ->name('auto-purchase-orders.generate');
         Route::patch('{purchaseOrder}/status', 'updateStatus')->name('purchase-orders.update-status');
         Route::get('{purchaseOrder}/receive', 'showReceiveForm')->name('purchase-orders.receive-form');
         Route::post('{purchaseOrder}/receive', 'processReceive')->name('purchase-orders.process-receive');

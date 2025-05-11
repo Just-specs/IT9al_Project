@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-
-
 @section('contents')
 <div class="d-flex align-items-center justify-content-between">
     <h1 class="mb-0">Computer Parts</h1>
@@ -19,6 +17,7 @@
             <th>#</th>
             <th>Name</th>
             <th>Type</th>
+            <th>Quantity</th>
             <th>Status</th>
             <th>Action</th>
         </tr>
@@ -30,6 +29,7 @@
             <td class="align-middle">{{ $loop->iteration }}</td>
             <td class="align-middle">{{ $product->name }}</td>
             <td class="align-middle">{{ $product->type }}</td>
+            <td class="align-middle">{{ $product->quantity }}</td>
             <td class="align-middle">
                 @if($product->status == 'available')
                 <span class="badge bg-success">Available</span>
@@ -41,7 +41,6 @@
                 <span class="badge bg-danger">Retired</span>
                 @endif
             </td>
-            
             <td class="align-middle">
                 <div class="btn-group" role="group">
                     <a href="{{ route('products.show', $product->id) }}" class="btn btn-secondary">Details</a>

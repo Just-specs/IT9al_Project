@@ -92,7 +92,6 @@ console.log('Script loaded');
     const supplierSelect = document.getElementById('supplier_id');
     const supplierHelper = document.getElementById('supplier-helper');
                 
-    // Always start disabled
     supplierSelect.disabled = true;
     supplierHelper.style.display = '';
 
