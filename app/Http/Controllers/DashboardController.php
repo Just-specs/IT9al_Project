@@ -63,6 +63,7 @@ class DashboardController extends Controller
         $totalSuppliers = Supplier::count();
         $totalEmployees = Employee::count();
         $totalDepartments = Department::count();
+        $totalPurchaseOrders = PurchaseOrder::count();
 
         // Get low stock items
         $lowStockItems = Product::where('quantity', '<', 10)->count();
@@ -76,14 +77,23 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        return view('employee.dashboard', compact(
+        // Get pending purchase orders (add this)
+        $pendingOrders = PurchaseOrder::where('status', 'pending')
+            ->with('supplier')
+            ->orderBy('created_at', 'desc')
+            ->limit(5)
+            ->get();
+
+        return view('employees.dashboard', compact(
             'totalProducts',
             'totalSuppliers',
             'totalEmployees',
             'totalDepartments',
             'lowStockItems',
             'itemsByStatus',
-            'recentActivities'
+            'recentActivities',
+            'totalPurchaseOrders',
+            'pendingOrders' // Add this to compact
         ));
     }
 }

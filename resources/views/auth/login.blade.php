@@ -22,33 +22,8 @@
             height: 100vh;
             margin: 0;
             color: white;
+            background: url("{{ asset('image/bg3.jpeg') }}") no-repeat center center;
             background-size: cover;
-            background-position: center;
-            background-repeat: repeat;
-            animation: slideshow 15s infinite;
-        }
-
-        @keyframes slideshow {
-            0% {
-                background: url("{{ asset('image/bg3.jpeg') }}") no-repeat center center / cover;
-            }
-
-            33% {
-                background: url("{{ asset('image/bg2.avif') }}") no-repeat center center / cover;
-            }
-
-            66% {
-                background: url("{{ asset('image/bg4.png') }}") no-repeat center center / cover;
-            }
-
-            85% {
-                background: url("{{ asset('image/bg5.jpg') }}") no-repeat center center / cover;
-            }
-
-            100% {
-                background: url("{{ asset('image/bg3.jpeg') }}") no-repeat center center / cover;
-            }
-
         }
 
         .card {

@@ -22,7 +22,7 @@
             height: 100vh;
             margin: 0;
             color: white;
-            background: url("{{ asset('image/bg.jpeg') }}") no-repeat center center;
+            background: url("{{ asset('image/bg3.jpeg') }}") no-repeat center center;
             background-size: cover;
         }
 
