@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 10, 2025 at 07:49 AM
+-- Generation Time: May 12, 2025 at 06:01 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -63,7 +63,11 @@ CREATE TABLE `departments` (
 --
 
 INSERT INTO `departments` (`id`, `name`, `created_at`, `updated_at`) VALUES
-(1, 'Bilat', '2025-05-04 09:18:24', '2025-05-04 09:18:24');
+(1, 'IT Department', NULL, NULL),
+(2, 'Finance Department', NULL, NULL),
+(3, 'HR Department', NULL, NULL),
+(4, 'Procurement', NULL, NULL),
+(5, 'Technical Support', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -85,8 +89,11 @@ CREATE TABLE `employees` (
 --
 
 INSERT INTO `employees` (`id`, `name`, `contact_number`, `department_id`, `created_at`, `updated_at`) VALUES
-(1, 'Divine', '09123456789', 1, '2025-05-04 09:18:34', '2025-05-04 09:18:34'),
-(2, 'Divine', '09123456789', 1, '2025-05-04 09:41:56', '2025-05-04 09:41:56');
+(1, 'Alice Ramos', '09171234567', 1, NULL, NULL),
+(2, 'Mark De Guzman', '09181234567', 2, NULL, NULL),
+(3, 'Jenny Cruz', '09192234567', 3, NULL, NULL),
+(4, 'Leo Fernandez', '09173456789', 4, NULL, NULL),
+(5, 'Carla Santos', '09184567890', 5, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -113,11 +120,11 @@ CREATE TABLE `failed_jobs` (
 CREATE TABLE `inventory_issues` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `product_id` bigint(20) UNSIGNED NOT NULL,
-  `employee_id` bigint(20) UNSIGNED NOT NULL,
-  `department_id` bigint(20) UNSIGNED NOT NULL,
+  `employee_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `department_id` bigint(20) UNSIGNED DEFAULT NULL,
   `quantity_issued` int(11) NOT NULL,
+  `stock_out_type` varchar(255) DEFAULT NULL,
   `issue_date` date NOT NULL,
-  `reason` varchar(255) DEFAULT NULL,
   `notes` text DEFAULT NULL,
   `issued_by` bigint(20) UNSIGNED DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -128,12 +135,57 @@ CREATE TABLE `inventory_issues` (
 -- Dumping data for table `inventory_issues`
 --
 
-INSERT INTO `inventory_issues` (`id`, `product_id`, `employee_id`, `department_id`, `quantity_issued`, `issue_date`, `reason`, `notes`, `issued_by`, `created_at`, `updated_at`) VALUES
-(1, 15, 1, 1, 12, '2025-05-10', 'asd', 'asd', NULL, '2025-05-09 20:55:07', '2025-05-09 20:55:07'),
-(2, 15, 1, 1, 15, '2025-05-10', '123', '123', 2, '2025-05-09 21:07:13', '2025-05-09 21:07:13'),
-(3, 15, 1, 1, 12, '2025-05-10', '123', '123', 2, '2025-05-09 21:08:10', '2025-05-09 21:08:10'),
-(4, 15, 1, 1, 3, '2025-05-10', 'sda', 'asd', 2, '2025-05-09 21:09:03', '2025-05-09 21:09:03'),
-(5, 15, 1, 1, 4, '2025-05-10', '123', '231', 2, '2025-05-09 21:20:15', '2025-05-09 21:20:15');
+INSERT INTO `inventory_issues` (`id`, `product_id`, `employee_id`, `department_id`, `quantity_issued`, `stock_out_type`, `issue_date`, `notes`, `issued_by`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 1, 1, 'Assigned', '2025-05-12', '2', 2, '2025-05-12 06:42:39', '2025-05-12 06:42:39'),
+(2, 1, 2, 1, 2, 'Assigned', '2025-05-12', '3', 2, '2025-05-12 06:43:10', '2025-05-12 06:43:10'),
+(6, 1, 1, 1, 1, 'Assigned', '2025-05-12', '123', 2, '2025-05-12 07:22:44', '2025-05-12 07:22:44'),
+(7, 1, 1, 1, 1, 'Assigned', '2025-05-12', '1213', 2, '2025-05-12 07:22:58', '2025-05-12 07:22:58'),
+(8, 1, 1, 1, 1, 'Assigned', '2025-05-12', '213', 2, '2025-05-12 07:24:01', '2025-05-12 07:24:01'),
+(9, 1, 2, 2, 1, 'Assigned', '2025-05-12', '12521', 2, '2025-05-12 07:27:09', '2025-05-12 07:27:09');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inventory_logs`
+--
+
+CREATE TABLE `inventory_logs` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `product_id` bigint(20) UNSIGNED NOT NULL,
+  `type` enum('stock_in','stock_out') NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `reference` varchar(255) DEFAULT NULL,
+  `remarks` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `inventory_logs`
+--
+
+INSERT INTO `inventory_logs` (`id`, `product_id`, `type`, `quantity`, `reference`, `remarks`, `created_at`, `updated_at`) VALUES
+(1, 1, 'stock_in', 6, '1', 'Stock received from purchase order', '2025-05-12 05:29:01', '2025-05-12 05:29:01'),
+(2, 1, 'stock_out', 1, NULL, '2', '2025-05-12 06:42:39', '2025-05-12 06:42:39'),
+(3, 1, 'stock_out', 2, NULL, '3', '2025-05-12 06:43:10', '2025-05-12 06:43:10'),
+(4, 4, 'stock_in', 5, '3', 'Stock received from purchase order', '2025-05-12 07:02:42', '2025-05-12 07:02:42'),
+(5, 5, 'stock_in', 5, '3', 'Stock received from purchase order', '2025-05-12 07:02:42', '2025-05-12 07:02:42'),
+(6, 6, 'stock_in', 5, '3', 'Stock received from purchase order', '2025-05-12 07:02:42', '2025-05-12 07:02:42'),
+(7, 7, 'stock_in', 5, '3', 'Stock received from purchase order', '2025-05-12 07:02:42', '2025-05-12 07:02:42'),
+(8, 8, 'stock_in', 5, '3', 'Stock received from purchase order', '2025-05-12 07:02:42', '2025-05-12 07:02:42'),
+(9, 9, 'stock_in', 5, '3', 'Stock received from purchase order', '2025-05-12 07:02:42', '2025-05-12 07:02:42'),
+(10, 10, 'stock_in', 5, '3', 'Stock received from purchase order', '2025-05-12 07:02:42', '2025-05-12 07:02:42'),
+(11, 4, 'stock_in', 2, '3', 'Stock received from purchase order', '2025-05-12 07:10:13', '2025-05-12 07:10:13'),
+(12, 5, 'stock_in', 2, '3', 'Stock received from purchase order', '2025-05-12 07:10:13', '2025-05-12 07:10:13'),
+(13, 6, 'stock_in', 2, '3', 'Stock received from purchase order', '2025-05-12 07:10:13', '2025-05-12 07:10:13'),
+(14, 7, 'stock_in', 3, '3', 'Stock received from purchase order', '2025-05-12 07:10:13', '2025-05-12 07:10:13'),
+(15, 8, 'stock_in', 1, '3', 'Stock received from purchase order', '2025-05-12 07:10:13', '2025-05-12 07:10:13'),
+(16, 9, 'stock_in', 2, '3', 'Stock received from purchase order', '2025-05-12 07:10:13', '2025-05-12 07:10:13'),
+(17, 10, 'stock_in', 2, '3', 'Stock received from purchase order', '2025-05-12 07:10:13', '2025-05-12 07:10:13'),
+(18, 1, 'stock_out', 1, NULL, '123', '2025-05-12 07:22:44', '2025-05-12 07:22:44'),
+(19, 1, 'stock_out', 1, NULL, '1213', '2025-05-12 07:22:58', '2025-05-12 07:22:58'),
+(20, 1, 'stock_out', 1, NULL, '213', '2025-05-12 07:24:01', '2025-05-12 07:24:01'),
+(21, 1, 'stock_out', 1, '9', '12521', '2025-05-12 07:27:09', '2025-05-12 07:27:09');
 
 -- --------------------------------------------------------
 
@@ -207,7 +259,8 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (18, '2025_05_06_051238_add_price_per_item_to_order_details_table', 6),
 (19, '2025_05_06_054614_create_product_supplier_table', 7),
 (20, '2025_05_10_040721_add_reason_and_notes_to_inventory_issues_table', 8),
-(21, '2025_05_10_050552_add_issued_by_to_inventory_issues_table', 9);
+(21, '2025_05_10_050552_add_issued_by_to_inventory_issues_table', 9),
+(24, '2025_05_11_000000_create_inventory_logs_table', 10);
 
 -- --------------------------------------------------------
 
@@ -217,7 +270,7 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 
 CREATE TABLE `order_details` (
   `id` bigint(20) UNSIGNED NOT NULL,
-  `part_id` bigint(20) UNSIGNED NOT NULL,
+  `product_id` bigint(20) UNSIGNED NOT NULL,
   `purchase_order_id` bigint(20) UNSIGNED NOT NULL,
   `quantity_ordered` int(11) NOT NULL,
   `price_per_item` decimal(10,2) NOT NULL DEFAULT 0.00,
@@ -230,22 +283,19 @@ CREATE TABLE `order_details` (
 -- Dumping data for table `order_details`
 --
 
-INSERT INTO `order_details` (`id`, `part_id`, `purchase_order_id`, `quantity_ordered`, `price_per_item`, `order_date`, `created_at`, `updated_at`) VALUES
-(2, 1, 2, 1, 0.00, '2025-05-05', '2025-05-04 19:02:08', '2025-05-04 19:02:08'),
-(3, 1, 3, 10, 0.00, '2025-05-05', '2025-05-05 01:33:21', '2025-05-05 01:33:21'),
-(4, 1, 4, 15, 0.00, '2025-05-05', '2025-05-05 05:06:05', '2025-05-05 05:06:05'),
-(5, 8, 5, 10, 0.00, '2025-05-05', '2025-05-05 05:07:10', '2025-05-05 05:07:10'),
-(6, 8, 6, 20, 0.00, '2025-05-05', '2025-05-05 05:07:48', '2025-05-05 05:07:48'),
-(7, 1, 7, 10, 0.00, '2025-05-06', '2025-05-05 20:58:47', '2025-05-05 20:58:47'),
-(8, 1, 8, 10, 0.00, '2025-05-06', '2025-05-05 21:09:36', '2025-05-05 21:09:36'),
-(9, 1, 9, 10, 0.00, '2025-05-06', '2025-05-05 21:13:14', '2025-05-05 21:13:14'),
-(10, 9, 10, 9, 150.00, '2025-05-06', '2025-05-05 21:13:34', '2025-05-05 21:13:34'),
-(11, 10, 11, 10, 120.00, '2025-05-06', '2025-05-05 21:58:05', '2025-05-05 21:58:05'),
-(12, 10, 12, 125, 120.00, '2025-05-06', '2025-05-05 21:58:23', '2025-05-05 21:58:23'),
-(13, 14, 13, 10, 124122.00, '2025-05-06', '2025-05-05 23:03:17', '2025-05-05 23:03:17'),
-(14, 14, 14, 10, 124122.00, '2025-05-08', '2025-05-08 07:08:37', '2025-05-08 07:08:37'),
-(15, 15, 15, 50, 5.00, '2025-05-08', '2025-05-08 07:47:27', '2025-05-08 07:47:27'),
-(16, 15, 16, 10, 5.00, '2025-05-08', '2025-05-08 09:38:51', '2025-05-08 09:38:51');
+INSERT INTO `order_details` (`id`, `product_id`, `purchase_order_id`, `quantity_ordered`, `price_per_item`, `order_date`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 6, 5.00, '2025-05-12', '2025-05-12 04:14:05', '2025-05-12 04:14:05'),
+(2, 1, 2, 6, 5.00, '2025-05-12', '2025-05-12 04:52:51', '2025-05-12 04:52:51'),
+(3, 2, 2, 7, 25.00, '2025-05-12', '2025-05-12 04:52:51', '2025-05-12 04:52:51'),
+(4, 3, 2, 8, 3.00, '2025-05-12', '2025-05-12 04:52:51', '2025-05-12 04:52:51'),
+(5, 11, 2, 8, 5.00, '2025-05-12', '2025-05-12 04:52:51', '2025-05-12 04:52:51'),
+(6, 4, 3, 7, 5.00, '2025-05-12', '2025-05-12 04:52:51', '2025-05-12 04:52:51'),
+(7, 5, 3, 8, 5.00, '2025-05-12', '2025-05-12 04:52:51', '2025-05-12 04:52:51'),
+(8, 6, 3, 7, 5.00, '2025-05-12', '2025-05-12 04:52:51', '2025-05-12 04:52:51'),
+(9, 7, 3, 9, 5.00, '2025-05-12', '2025-05-12 04:52:51', '2025-05-12 04:52:51'),
+(10, 8, 3, 6, 5.00, '2025-05-12', '2025-05-12 04:52:51', '2025-05-12 04:52:51'),
+(11, 9, 3, 7, 5.00, '2025-05-12', '2025-05-12 04:52:51', '2025-05-12 04:52:51'),
+(12, 10, 3, 7, 5.00, '2025-05-12', '2025-05-12 04:52:51', '2025-05-12 04:52:51');
 
 -- --------------------------------------------------------
 
@@ -275,7 +325,7 @@ CREATE TABLE `products` (
   `min_stock_level` int(11) NOT NULL DEFAULT 5,
   `serial_number` varchar(255) DEFAULT NULL,
   `specifications` text NOT NULL,
-  `status` enum('available','assigned','maintenance','retired') NOT NULL DEFAULT 'available',
+  `status` enum('available','low stock','out of stock') NOT NULL DEFAULT 'available',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -285,20 +335,17 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `description`, `type`, `quantity`, `price_per_item`, `min_stock_level`, `serial_number`, `specifications`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'AMD', '', 'Motherboard', 116, 0.00, 5, NULL, '', 'available', '2025-05-04 19:01:48', '2025-05-05 20:59:47'),
-(2, 'Ryzen', '', 'CPU', 15, 0.00, 5, NULL, '', 'available', '2025-05-05 02:15:45', '2025-05-05 02:15:45'),
-(3, 'Bilat', '', 'Storage', 123, 0.00, 5, NULL, '', 'available', '2025-05-05 02:59:23', '2025-05-05 02:59:23'),
-(4, 'bulbul', '', 'RAM', 10, 0.00, 5, NULL, '', 'available', '2025-05-05 03:15:55', '2025-05-05 03:15:55'),
-(5, 'luisdanielpanal', '', 'CPU', 156, 0.00, 5, NULL, '', 'available', '2025-05-05 03:34:52', '2025-05-05 03:34:52'),
-(6, '12312312', '', 'Storage', 123, 0.00, 5, NULL, '', 'available', '2025-05-05 03:43:57', '2025-05-05 03:43:57'),
-(8, 'Intel', '23423', 'CPU', 13, 150.00, 5, 'SN-6818B7EBA64FC', 'xzcz', 'available', '2025-05-05 05:06:51', '2025-05-05 05:18:20'),
-(9, 'GFORCE', 'BEST!', 'Power Supply', 150, 150.00, 5, 'SN-6819995FAADFF', 'skemberlu', 'available', '2025-05-05 21:08:47', '2025-05-05 21:08:47'),
-(10, 'tralelelo tralala', 'skemter', 'Motherboard', 200, 120.00, 5, 'SN-6819A4DCAC369', 'kigwa', 'available', '2025-05-05 21:57:48', '2025-05-08 06:14:27'),
-(11, 'zxcxxzcd', 'asdz', 'CPU', 1232, 123.00, 5, 'SN-6819A61D74912', 'zxczdc', 'available', '2025-05-05 22:03:09', '2025-05-05 22:03:09'),
-(12, '12312312', '123213', 'Storage', 123, 123123.00, 5, 'SN-6819A8CC17C62', '1231231', 'available', '2025-05-05 22:14:36', '2025-05-05 22:14:36'),
-(13, '23123', '123', 'CPU', 1232, 241.00, 5, 'SN-6819A8DA186CC', '123', 'available', '2025-05-05 22:14:50', '2025-05-05 22:14:50'),
-(14, '12312312312', '141241', 'RAM', 12412422, 124122.00, 5, 'SN-6819ADC26C773', '12412412', 'available', '2025-05-05 22:35:46', '2025-05-08 07:36:17'),
-(15, 'ROG', 'BEST!', 'CPU', 21, 5.00, 5, 'SN-681CD1FE2D787', 'kigwa', 'available', '2025-05-08 07:47:10', '2025-05-09 21:20:15');
+(1, 'Ryzen', 'Skamb', 'CPU', 3, 5.00, 5, 'SN-6821E5E3F3874', 'xasd', 'low stock', '2025-05-12 04:13:23', '2025-05-12 07:27:09'),
+(2, 'kigwa', '123', 'RAM', 3, 25.00, 5, 'SN-6821E64448356', '2313', 'low stock', '2025-05-12 04:15:00', '2025-05-12 04:15:00'),
+(3, 'sadasd', 'asdasdas', 'Storage', 2, 3.00, 5, 'SN-6821E74AB6C61', 'adsdasdas', 'low stock', '2025-05-12 04:19:22', '2025-05-12 04:19:22'),
+(4, '1212512', '1251251', 'RAM', 10, 5.00, 5, 'SN-6821E823ECC2B', '12515215', 'low stock', '2025-05-12 04:22:59', '2025-05-12 07:10:13'),
+(5, 'erewwewwe', '123213', 'Motherboard', 9, 5.00, 5, 'SN-6821E84A3B14C', '12412421', 'low stock', '2025-05-12 04:23:38', '2025-05-12 07:10:13'),
+(6, 'skigwa12', '12', 'Storage', 10, 5.00, 5, 'SN-6821E88D5F763', '1241', 'low stock', '2025-05-12 04:24:45', '2025-05-12 07:10:13'),
+(7, '12312312', '12412', 'Storage', 9, 5.00, 5, 'SN-6821E96A93F96', '4214214', 'low stock', '2025-05-12 04:28:26', '2025-05-12 07:10:13'),
+(8, 'Ryzen', '123123', 'Motherboard', 10, 5.00, 5, 'SN-6821E9D350AC3', '12312321', 'low stock', '2025-05-12 04:30:11', '2025-05-12 07:10:13'),
+(9, 'ohohohw', '12312', 'CPU', 10, 5.00, 5, 'SN-6821EA5B997D5', '12312', 'low stock', '2025-05-12 04:32:27', '2025-05-12 07:10:13'),
+(10, 'dssdsd', '12321', 'Graphics Card', 10, 5.00, 5, 'SN-6821EBB0A410F', '12312', 'low stock', '2025-05-12 04:38:08', '2025-05-12 07:10:13'),
+(11, 'qew', '1321', 'Graphics Card', 2, 5.00, 5, 'SN-6821EBC7D89EE', '123', 'low stock', '2025-05-12 04:38:31', '2025-05-12 04:52:51');
 
 -- --------------------------------------------------------
 
@@ -319,12 +366,17 @@ CREATE TABLE `product_supplier` (
 --
 
 INSERT INTO `product_supplier` (`id`, `product_id`, `supplier_id`, `created_at`, `updated_at`) VALUES
-(1, 10, 1, NULL, NULL),
-(3, 12, 1, NULL, NULL),
-(4, 12, 2, NULL, NULL),
-(5, 13, 1, NULL, NULL),
-(6, 14, 1, NULL, NULL),
-(7, 15, 2, NULL, NULL);
+(1, 1, 1, NULL, NULL),
+(2, 2, 1, NULL, NULL),
+(3, 3, 1, NULL, NULL),
+(4, 4, 2, NULL, NULL),
+(5, 5, 2, NULL, NULL),
+(6, 6, 2, NULL, NULL),
+(7, 7, 2, NULL, NULL),
+(8, 8, 2, NULL, NULL),
+(9, 9, 2, NULL, NULL),
+(10, 10, 2, NULL, NULL),
+(11, 11, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -336,7 +388,7 @@ CREATE TABLE `purchase_orders` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `supplier_id` bigint(20) UNSIGNED NOT NULL,
   `total_amount` decimal(10,2) NOT NULL,
-  `status` enum('partial','pending','approved','completed','received','cancelled') CHARACTER SET utf8mb4 COLLATE utf8mb4_vietnamese_ci NOT NULL DEFAULT 'pending',
+  `status` enum('draft','partial','pending','approved','completed','received','cancelled') CHARACTER SET utf8mb4 COLLATE utf8mb4_vietnamese_ci NOT NULL DEFAULT 'pending',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -346,21 +398,9 @@ CREATE TABLE `purchase_orders` (
 --
 
 INSERT INTO `purchase_orders` (`id`, `supplier_id`, `total_amount`, `status`, `created_at`, `updated_at`) VALUES
-(2, 1, 1.00, 'received', '2025-05-04 19:02:08', '2025-05-05 01:15:42'),
-(3, 1, 10.00, 'approved', '2025-05-05 01:33:21', '2025-05-05 02:08:23'),
-(4, 1, 15.00, 'pending', '2025-05-05 05:06:05', '2025-05-05 05:06:05'),
-(5, 1, 10.00, 'approved', '2025-05-05 05:07:10', '2025-05-08 09:40:36'),
-(6, 2, 20.00, 'approved', '2025-05-05 05:07:48', '2025-05-05 05:17:33'),
-(7, 1, 10.00, 'received', '2025-05-05 20:58:47', '2025-05-05 20:59:47'),
-(8, 2, 0.00, 'pending', '2025-05-05 21:09:36', '2025-05-05 21:09:36'),
-(9, 1, 0.00, 'pending', '2025-05-05 21:13:14', '2025-05-05 21:13:14'),
-(10, 2, 1350.00, 'approved', '2025-05-05 21:13:34', '2025-05-08 08:55:46'),
-(11, 2, 1200.00, 'approved', '2025-05-05 21:58:05', '2025-05-08 08:55:37'),
-(12, 1, 15000.00, 'partial', '2025-05-05 21:58:23', '2025-05-08 06:14:27'),
-(13, 1, 1241220.00, 'received', '2025-05-05 23:03:17', '2025-05-08 07:36:17'),
-(14, 1, 1241220.00, 'approved', '2025-05-08 07:08:37', '2025-05-08 08:00:59'),
-(15, 2, 250.00, 'received', '2025-05-08 07:47:27', '2025-05-08 08:05:10'),
-(16, 2, 50.00, 'received', '2025-05-08 09:38:51', '2025-05-08 09:52:43');
+(1, 1, 30.00, 'received', '2025-05-12 04:14:05', '2025-05-12 05:29:01'),
+(2, 1, 269.00, 'draft', '2025-05-12 04:52:51', '2025-05-12 04:52:51'),
+(3, 2, 255.00, 'partial', '2025-05-12 04:52:51', '2025-05-12 07:02:42');
 
 -- --------------------------------------------------------
 
@@ -384,14 +424,21 @@ CREATE TABLE `purchase_order_receivings` (
 --
 
 INSERT INTO `purchase_order_receivings` (`id`, `order_detail_id`, `received_date`, `quantity_received`, `received_by`, `notes`, `created_at`, `updated_at`) VALUES
-(4, 2, '2025-05-05', 1, 'Luis', NULL, '2025-05-05 01:15:42', '2025-05-05 01:15:42'),
-(5, 3, '2025-05-05', 5, 'Luis', NULL, '2025-05-05 02:08:48', '2025-05-05 02:08:48'),
-(6, 6, '2025-05-05', 3, 'dfg', NULL, '2025-05-05 05:18:20', '2025-05-05 05:18:20'),
-(7, 7, '2025-05-06', 10, 'Luis', NULL, '2025-05-05 20:59:47', '2025-05-05 20:59:47'),
-(11, 12, '2025-05-08', 100, 'Luis', NULL, '2025-05-08 06:14:27', '2025-05-08 06:14:27'),
-(12, 13, '2025-05-08', 10, 'Luis', NULL, '2025-05-08 07:36:17', '2025-05-08 07:36:17'),
-(13, 15, '2025-05-08', 50, 'Divine', NULL, '2025-05-08 08:05:10', '2025-05-08 08:05:10'),
-(14, 16, '2025-05-08', 10, 'Luis', NULL, '2025-05-08 09:52:43', '2025-05-08 09:52:43');
+(1, 1, '2025-05-12', 6, 'Luis', '12312', '2025-05-12 05:29:01', '2025-05-12 05:29:01'),
+(2, 6, '2025-05-12', 5, 'Justin', NULL, '2025-05-12 07:02:42', '2025-05-12 07:02:42'),
+(3, 7, '2025-05-12', 5, 'Justin', NULL, '2025-05-12 07:02:42', '2025-05-12 07:02:42'),
+(4, 8, '2025-05-12', 5, 'Justin', NULL, '2025-05-12 07:02:42', '2025-05-12 07:02:42'),
+(5, 9, '2025-05-12', 5, 'Justin', NULL, '2025-05-12 07:02:42', '2025-05-12 07:02:42'),
+(6, 10, '2025-05-12', 5, 'Justin', NULL, '2025-05-12 07:02:42', '2025-05-12 07:02:42'),
+(7, 11, '2025-05-12', 5, 'Justin', NULL, '2025-05-12 07:02:42', '2025-05-12 07:02:42'),
+(8, 12, '2025-05-12', 5, 'Justin', '123', '2025-05-12 07:02:42', '2025-05-12 07:02:42'),
+(9, 6, '2025-05-12', 2, 'Justin', NULL, '2025-05-12 07:10:13', '2025-05-12 07:10:13'),
+(10, 7, '2025-05-12', 2, 'Justin', NULL, '2025-05-12 07:10:13', '2025-05-12 07:10:13'),
+(11, 8, '2025-05-12', 2, 'Justin', NULL, '2025-05-12 07:10:13', '2025-05-12 07:10:13'),
+(12, 9, '2025-05-12', 3, 'Justin', NULL, '2025-05-12 07:10:13', '2025-05-12 07:10:13'),
+(13, 10, '2025-05-12', 1, 'Justin', NULL, '2025-05-12 07:10:13', '2025-05-12 07:10:13'),
+(14, 11, '2025-05-12', 2, 'Justin', NULL, '2025-05-12 07:10:13', '2025-05-12 07:10:13'),
+(15, 12, '2025-05-12', 2, 'Justin', NULL, '2025-05-12 07:10:13', '2025-05-12 07:10:13');
 
 -- --------------------------------------------------------
 
@@ -427,7 +474,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('tx8rdhplsKUYBDQxN1XSN4TSVvXJ5aB2QCTpeEuV', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiWGJKckdmVlh2Tk5mN1FuSkVENHQ3azRHSGg3WFV4ck5hTm10VmhoUyI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MjtzOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czozODoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2ludmVudG9yeS1pc3N1ZXMiO319', 1746856071);
+('RTroSzo7NG3sFYOHG55Wuenn7m4sVh7Ah1IntTPZ', 2, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiYnZFSFMxeG0yNUdHMDlFdWw1Y0VMRDVtWmhVWk1xVDY5c29wN3pXZSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MjtzOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czozNjoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2ludmVudG9yeS1sb2dzIjt9fQ==', 1747065177);
 
 -- --------------------------------------------------------
 
@@ -471,8 +518,8 @@ CREATE TABLE `suppliers` (
 --
 
 INSERT INTO `suppliers` (`id`, `name`, `contact_number`, `email`, `created_at`, `updated_at`) VALUES
-(1, 'Justin', '09123456789', 'test@gmail.com', '2025-04-18 09:16:13', '2025-04-18 09:16:13'),
-(2, 'Bieber', '12312312312', 'test@gmail.com', '2025-05-05 02:15:24', '2025-05-05 02:15:24');
+(1, 'Justin', '12312312312', 'baker@gmail.com', '2025-05-12 04:13:36', '2025-05-12 04:13:36'),
+(2, 'Bilat', '125125', 'divinelovemypookiebear@gmail.com', '2025-05-12 04:22:42', '2025-05-12 04:22:42');
 
 -- --------------------------------------------------------
 
@@ -545,6 +592,13 @@ ALTER TABLE `inventory_issues`
   ADD KEY `inventory_issues_part_id_foreign` (`product_id`);
 
 --
+-- Indexes for table `inventory_logs`
+--
+ALTER TABLE `inventory_logs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `inventory_logs_product_id_foreign` (`product_id`);
+
+--
 -- Indexes for table `jobs`
 --
 ALTER TABLE `jobs`
@@ -568,7 +622,7 @@ ALTER TABLE `migrations`
 --
 ALTER TABLE `order_details`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `order_details_part_id_foreign` (`part_id`),
+  ADD KEY `order_details_part_id_foreign` (`product_id`),
   ADD KEY `order_details_purchase_order_id_foreign` (`purchase_order_id`);
 
 --
@@ -647,13 +701,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `departments`
 --
 ALTER TABLE `departments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -665,7 +719,13 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `inventory_issues`
 --
 ALTER TABLE `inventory_issues`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `inventory_logs`
+--
+ALTER TABLE `inventory_logs`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `jobs`
@@ -677,37 +737,37 @@ ALTER TABLE `jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `order_details`
 --
 ALTER TABLE `order_details`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `product_supplier`
 --
 ALTER TABLE `product_supplier`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `purchase_orders`
 --
 ALTER TABLE `purchase_orders`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `purchase_order_receivings`
 --
 ALTER TABLE `purchase_order_receivings`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `reports`
@@ -725,7 +785,7 @@ ALTER TABLE `stocks`
 -- AUTO_INCREMENT for table `suppliers`
 --
 ALTER TABLE `suppliers`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -752,10 +812,16 @@ ALTER TABLE `inventory_issues`
   ADD CONSTRAINT `inventory_issues_part_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`);
 
 --
+-- Constraints for table `inventory_logs`
+--
+ALTER TABLE `inventory_logs`
+  ADD CONSTRAINT `inventory_logs_product_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `order_details`
 --
 ALTER TABLE `order_details`
-  ADD CONSTRAINT `order_details_part_id_foreign` FOREIGN KEY (`part_id`) REFERENCES `products` (`id`),
+  ADD CONSTRAINT `order_details_part_id_foreign` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`),
   ADD CONSTRAINT `order_details_purchase_order_id_foreign` FOREIGN KEY (`purchase_order_id`) REFERENCES `purchase_orders` (`id`) ON DELETE CASCADE;
 
 --

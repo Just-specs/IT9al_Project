@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('min_stock_level')->default(5);
             $table->string('serial_number')->nullable()->unique();
             $table->text('specifications')->nullable();
-            $table->enum('status', ['available', 'assigned', 'maintenance', 'retired'])->default('available');
+            $table->enum('status', ['available', 'low stock', 'out of stock'])->default('available');
             $table->timestamps();
         });
     }
