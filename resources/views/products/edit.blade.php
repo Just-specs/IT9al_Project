@@ -1,10 +1,9 @@
+
 @extends('layouts.app')
-
-
 
 @section('contents')
 <div class="d-flex align-items-center justify-content-between">
-    <h1 class="mb-0">Computer Parts</h1>
+    <h1 class="mb-0">Edit Product</h1>
     <a href="{{ route('products') }}" class="btn btn-secondary">Back</a>
 </div>
 <hr />
@@ -49,20 +48,6 @@
             <label class="form-label">Minimum Stock Level</label>
             <input type="number" name="min_stock_level" class="form-control @error('min_stock_level') is-invalid @enderror" value="{{ old('min_stock_level', $product->min_stock_level) }}">
             @error('min_stock_level')
-            <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-        </div>
-    </div>
-    <div class="row mb-3">
-        <div class="col-md-6">
-            <label class="form-label">Status</label>
-            <select name="status" class="form-control @error('status') is-invalid @enderror">
-                <option value="available" {{ old('status', $product->status) == 'available' ? 'selected' : '' }}>Available</option>
-                <option value="assigned" {{ old('status', $product->status) == 'assigned' ? 'selected' : '' }}>Assigned</option>
-                <option value="maintenance" {{ old('status', $product->status) == 'maintenance' ? 'selected' : '' }}>Maintenance</option>
-                <option value="retired" {{ old('status', $product->status) == 'retired' ? 'selected' : '' }}>Retired</option>
-            </select>
-            @error('status')
             <div class="invalid-feedback">{{ $message }}</div>
             @enderror
         </div>
@@ -116,7 +101,7 @@
         </div>
     </div>
     <div class="row">
-    <div class="col-12 text-end">
+        <div class="col-12 text-end">
             <button type="submit" class="btn btn-warning">Update</button>
         </div>
     </div>

@@ -11,15 +11,32 @@ class Product extends Model
 
     protected $fillable = [
         'name',
-        'type',
         'description',
+        'type',
         'quantity',
         'min_stock_level',
-        'serial_number',
         'specifications',
-        'status',
         'price_per_item',
+        'status',
+        'serial_number',
     ];
+
+   
+    public function updateStockStatus()
+    {
+        $newStatus = 'available';
+
+        if ($this->quantity <= 0) {
+            $newStatus = 'out of stock';
+        } elseif ($this->quantity <= $this->min_stock_level) {
+            $newStatus = 'low stock';
+        }
+
+        if ($this->status !== $newStatus) {
+            $this->status = $newStatus;
+            $this->save();
+        }
+    }
 
     // Define relationships
     public function supplier()
@@ -42,7 +59,11 @@ class Product extends Model
         return $this->belongsToMany(Supplier::class, 'product_supplier');
     }
 
-    // Check if product is low on stock
+    public function inventoryLogs()
+    {
+        return $this->hasMany(InventoryLog::class);
+    }
+
     public function isLowStock()
     {
         return $this->quantity <= $this->min_stock_level;

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\OrderDetail;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderReceiving;
+use App\Models\InventoryLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -73,6 +74,15 @@ class PurchaseOrderReceivingController extends Controller
             $part = $orderDetail->part;
             $part->quantity += $request->quantity_received;
             $part->save();
+
+            // Log the inventory change
+            InventoryLog::create([
+                'product_id' => $part->id,
+                'type' => 'stock_in',
+                'quantity' => $request->quantity_received,
+                'reference' => $purchaseOrder->id,
+                'remarks' => 'Stock received from purchase order',
+            ]);
 
             // Check if fully received
             $totalReceived = $orderDetail->receivings()->sum('quantity_received');
@@ -202,7 +212,6 @@ class PurchaseOrderReceivingController extends Controller
             'receivings.*.order_detail_id' => 'required|exists:order_details,id',
             'receivings.*.quantity_received' => 'required|integer|min:1',
             'receivings.*.notes' => 'nullable|string|max:255',
-            'received_by' => 'required|string',
         ]);
 
         try {
@@ -219,7 +228,7 @@ class PurchaseOrderReceivingController extends Controller
                     $orderDetail->receivings()->create([
                         'received_date' => now(),
                         'quantity_received' => $receiving['quantity_received'],
-                        'received_by' => $request->received_by,
+                        'received_by' => auth()->user()->name, // Automatically set to the logged-in user's name
                         'notes' => $receiving['notes'] ?? null,
                     ]);
 
@@ -227,6 +236,15 @@ class PurchaseOrderReceivingController extends Controller
                     $product = $orderDetail->product;
                     $product->quantity += $receiving['quantity_received'];
                     $product->save();
+
+                    // Log the stock-in action
+                    InventoryLog::create([
+                        'product_id' => $product->id,
+                        'type' => 'stock_in',
+                        'quantity' => $receiving['quantity_received'],
+                        'reference' => $orderDetail->purchase_order_id,
+                        'remarks' => 'Stock received from purchase order',
+                    ]);
                 }
             }
 

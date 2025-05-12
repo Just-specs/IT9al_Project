@@ -49,16 +49,7 @@
     </div>
     <div class="row mb-3">
         <div class="col-md-6">
-            <label class="form-label">Status</label>
-            <select name="status" class="form-control @error('status') is-invalid @enderror">
-                <option value="available" {{ old('status') == 'available' ? 'selected' : '' }}>Available</option>
-                <option value="assigned" {{ old('status') == 'assigned' ? 'selected' : '' }}>Assigned</option>
-                <option value="maintenance" {{ old('status') == 'maintenance' ? 'selected' : '' }}>Maintenance</option>
-                <option value="retired" {{ old('status') == 'retired' ? 'selected' : '' }}>Retired</option>
-            </select>
-            @error('status')
-            <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
+            
         </div>
         <div class="col-md-6"></div>
     </div>

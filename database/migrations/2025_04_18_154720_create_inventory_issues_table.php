@@ -17,8 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('department_id');
             $table->unsignedBigInteger('employee_id');
             $table->integer('quantity_issued');
+             $table->string('stock_out_type')->nullable();	
             $table->date('issue_date');
-            $table->string('reason')->nullable();
             $table->text('notes')->nullable();
             $table->unsignedBigInteger('issued_by')->nullable();
             $table->timestamps();

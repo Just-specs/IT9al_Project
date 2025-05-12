@@ -9,16 +9,16 @@ class InventoryIssue extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'product_id',
-        'department_id',
-        'employee_id',
-        'quantity_issued',
-        'issue_date',
-        'reason',
-        'notes',
-        'issued_by',
-    ];
+   protected $fillable = [
+    'product_id',
+    'stock_out_type',
+    'quantity_issued',
+    'department_id',
+    'employee_id',
+    'notes',
+    'issued_by',
+    'issue_date',
+];
 
     protected $casts = [
         'issue_date' => 'date',

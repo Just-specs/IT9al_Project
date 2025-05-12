@@ -87,12 +87,8 @@
                         </div>
                         <div class="card-body">
                             <div class="row mb-3">
-                                <div class="col-md-4 font-weight-bold">Department:</div>
+                                <div class="col-md-4 font-weight-bold">Department Name:</div>
                                 <div class="col-md-8">{{ $inventoryIssue->department->name }}</div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-4 font-weight-bold">Location:</div>
-                                <div class="col-md-8">{{ $inventoryIssue->department->location ?? 'N/A' }}</div>
                             </div>
                         </div>
                     </div>

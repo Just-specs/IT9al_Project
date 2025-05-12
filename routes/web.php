@@ -14,6 +14,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\PurchaseOrderReceivingController;
+use App\Http\Controllers\InventoryLogController;
 
 
 Route::get('/', function () {
@@ -139,3 +140,6 @@ Route::middleware('auth')->group(function () {
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 
 Route::get('/suppliers/for-product', [App\Http\Controllers\SupplierController::class, 'suppliersForProduct'])->name('suppliers.for-product');
+
+Route::get('/inventory-logs', [InventoryLogController::class, 'index'])->name('inventory-logs.index');
+Route::get('/departments/{department}/employees', [DepartmentController::class, 'getEmployees']);

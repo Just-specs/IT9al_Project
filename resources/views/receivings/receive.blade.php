@@ -50,10 +50,6 @@
         </table>
     </div>
     <div class="mb-3">
-        <label for="received_by" class="form-label">Received By</label>
-        <input type="text" class="form-control" id="received_by" name="received_by" required>
-    </div>
-    <div class="mb-3">
         <label for="notes" class="form-label">Notes</label>
         <textarea class="form-control" name="receivings[{{ $detail->id }}][notes]" rows="3"></textarea>
     </div>

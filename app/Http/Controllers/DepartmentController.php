@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Department;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
@@ -80,5 +81,15 @@ class DepartmentController extends Controller
         $department = Department::findOrFail($id);
         $department->delete();
         return redirect()->route('departments')->with('success', 'Department deleted successfully');
+    }
+
+    /**
+     * Get employees by department ID.
+     */
+    public function getEmployees($departmentId)
+    {
+        $employees = Employee::where('department_id', $departmentId)->get();
+
+        return response()->json($employees);
     }
 }

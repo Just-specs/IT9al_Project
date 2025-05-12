@@ -39,7 +39,7 @@ class ProductController extends Controller
             'min_stock_level' => 'required|integer|min:0',
             'specifications' => 'nullable|string',
             'price_per_item' => 'required|numeric|min:0',
-            'status' => 'required|in:available,assigned,maintenance,retired',
+            'status' => 'nullable|in:available,low stock,out of stock',
             'suppliers' => 'array',
             'suppliers.*' => 'exists:suppliers,id',
         ]);
@@ -49,6 +49,9 @@ class ProductController extends Controller
 
         $product = Product::create($validated);
         $product->suppliers()->sync($request->input('suppliers', []));
+
+        // Update stock status
+        $product->updateStockStatus();
 
         return redirect()->route('products')->with('success', 'Product added successfully');
     }
@@ -87,13 +90,16 @@ class ProductController extends Controller
             'min_stock_level' => 'required|integer|min:0',
             'serial_number' => 'nullable|string|max:255|unique:products,serial_number,' . $id,
             'specifications' => 'nullable|string',
-            'status' => 'required|in:available,assigned,maintenance,retired',
+            'status' => 'nullable|in:available,low stock,out of stock',
             'suppliers' => 'array',
             'suppliers.*' => 'exists:suppliers,id',
         ]);
 
         $product->update($validated);
         $product->suppliers()->sync($request->input('suppliers', []));
+
+        // Update stock status
+        $product->updateStockStatus();
 
         return redirect()->route('products')->with('success', 'Product updated successfully');
     }

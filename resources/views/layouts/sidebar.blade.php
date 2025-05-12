@@ -45,9 +45,17 @@
 
     <li class="nav-item">
         <a class="nav-link" href="{{ route('inventory-issues') }}">
-            <i class="fas fa-arrow-down"></i>
+            <i class="fas fa-arrow-up"></i>
             <span>Stock Out</span></a>
     </li>
+
+    <!-- Nav Item - Inventory Logs -->
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('inventory-logs.index') }}">
+            <i class="fas fa-clipboard-list"></i>
+            <span>Inventory Logs</span></a>
+    </li>
+
     @if(Auth::user()->role == 'admin')
     <li class="nav-item">
         <a class="nav-link" href="{{ route('employees') }}">
@@ -61,6 +69,7 @@
             <span>Departments</span></a>
     </li>
     @endif
+
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
 
