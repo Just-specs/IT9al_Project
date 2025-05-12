@@ -9,7 +9,7 @@
         <form action="{{ route('purchase-orders.index') }}" method="GET" class="d-flex">
             <div class="input-group">
                 <select name="status" class="form-control" onchange="this.form.submit()">
-                    <option value="">All Statuses</option>
+                    <option value="">All</option>
                     <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
                     <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
                     <option value="approved" {{ request('status') == 'approved' ? 'selected' : '' }}>Approved</option>

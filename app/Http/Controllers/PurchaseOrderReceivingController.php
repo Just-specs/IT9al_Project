@@ -183,9 +183,9 @@ class PurchaseOrderReceivingController extends Controller
      */
     public function showReceiveForm(PurchaseOrder $purchaseOrder)
     {
-        if ($purchaseOrder->status !== 'approved') {
+        if (!in_array($purchaseOrder->status, ['approved', 'partial'])) {
             return redirect()->route('purchase-orders.show', $purchaseOrder)
-                ->withErrors(['error' => 'Only approved purchase orders can receive items.']);
+                ->withErrors(['error' => 'Only approved or partially received purchase orders can receive items.']);
         }
 
         $purchaseOrder->load(['supplier', 'orderDetails.product', 'orderDetails.receivings']);
@@ -201,6 +201,7 @@ class PurchaseOrderReceivingController extends Controller
             'receivings' => 'required|array',
             'receivings.*.order_detail_id' => 'required|exists:order_details,id',
             'receivings.*.quantity_received' => 'required|integer|min:1',
+            'receivings.*.notes' => 'nullable|string|max:255',
             'received_by' => 'required|string',
         ]);
 
@@ -209,13 +210,12 @@ class PurchaseOrderReceivingController extends Controller
 
             $allReceived = true;
             $anyReceived = false;
-            $totalReceived = 0;
 
             foreach ($request->receivings as $receiving) {
                 if ($receiving['quantity_received'] > 0) {
-                    // Create receiving record
                     $orderDetail = OrderDetail::findOrFail($receiving['order_detail_id']);
-                    
+
+                    // Create receiving record
                     $orderDetail->receivings()->create([
                         'received_date' => now(),
                         'quantity_received' => $receiving['quantity_received'],
@@ -227,14 +227,12 @@ class PurchaseOrderReceivingController extends Controller
                     $product = $orderDetail->product;
                     $product->quantity += $receiving['quantity_received'];
                     $product->save();
-
-                    $totalReceived += $receiving['quantity_received'];
                 }
             }
 
-            // Check status for all order details
+            // Check if all items are fully received
             foreach ($purchaseOrder->orderDetails as $detail) {
-                $totalReceivedForDetail = $detail->receivings()->sum('quantity_received');
+                $totalReceivedForDetail = $detail->receivings->sum('quantity_received');
                 if ($totalReceivedForDetail < $detail->quantity_ordered) {
                     $allReceived = false;
                 }
@@ -243,7 +241,8 @@ class PurchaseOrderReceivingController extends Controller
                 }
             }
 
-            if ($allReceived && $totalReceived > 0) {
+            // Update the purchase order status
+            if ($allReceived) {
                 $purchaseOrder->update(['status' => 'received']);
             } elseif ($anyReceived) {
                 $purchaseOrder->update(['status' => 'partial']);

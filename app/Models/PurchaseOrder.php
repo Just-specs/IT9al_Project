@@ -34,15 +34,22 @@ class PurchaseOrder extends Model
 
     public function orderDetails(): HasMany
     {
-        return $this->hasMany(OrderDetail::class);
+        return $this->hasMany(OrderDetail::class, 'purchase_order_id');
     }
 
     /**
      * Get the purchase order receiving records associated with this purchase order.
      */
-    public function receivings(): HasMany
+    public function receivings()
     {
-        return $this->hasMany(PurchaseOrderReceiving::class, 'order_detail_id');
+        return $this->hasManyThrough(
+            PurchaseOrderReceiving::class,
+            OrderDetail::class,
+            'purchase_order_id', 
+            'order_detail_id',  
+            'id',               
+            'id'                
+        );
     }
     
     /**

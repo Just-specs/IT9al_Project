@@ -53,10 +53,10 @@
                                     <input type="hidden" name="status" value="approved">
                                     <button type="submit" class="btn btn-primary btn-sm">Approve</button>
                                 </form>
-                            @elseif($po->status == 'approved')
+                            @elseif($po->status == 'approved' || $po->status == 'partial')
                                 <a href="{{ route('receivings.receive-form', $po->id) }}" class="btn btn-success btn-sm">Record Receiving</a>
                             @else
-                                <span class="text-muted">No action</span>
+                                <span class="text-muted"></span>
                             @endif
                         </td>
                     </tr>
