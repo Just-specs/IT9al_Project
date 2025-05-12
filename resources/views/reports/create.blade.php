@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('content')
+@section('contents')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -38,6 +38,20 @@
                             @enderror
                         </div>
 
+                        <div class="mb-3">
+                            <label for="status" class="form-label">Report Status</label>
+                            <select class="form-select @error('status') is-invalid @enderror" id="status" name="status" required>
+                                <option value="pending" {{ old('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                                <option value="approved" {{ old('status') == 'approved' ? 'selected' : '' }}>Approved</option>
+                                <option value="rejected" {{ old('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                            </select>
+                            @error('status')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
+                        </div>
+
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="start_date" class="form-label">Start Date</label>
@@ -68,7 +82,7 @@
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
                                 </span>
-                                @enderror
+                                @enderror>
                                 <div class="form-text">If set, only products with quantity at or below this level will be included.</div>
                             </div>
                         </div>

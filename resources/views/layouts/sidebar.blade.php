@@ -62,7 +62,7 @@
     </li>
     <li class="nav-item">
         <a class="nav-link" href="{{ route('reports') }}">
-            <i class="fas fa-building"></i>
+            <i class="fas fa-chart-line"></i>
             <span>Reports</span></a>
     </li>
 

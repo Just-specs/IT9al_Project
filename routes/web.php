@@ -119,12 +119,13 @@ Route::middleware('auth')->group(function () {
 
     // Reports Routes
     Route::controller(ReportController::class)->prefix('reports')->group(function () {
-        Route::get('', 'index')->name('reports');
+        Route::get('', 'index')->name('reports');  // Using 'reports' as route name
         Route::get('create', 'create')->name('reports.create');
         Route::post('store', 'store')->name('reports.store');
         Route::get('show/{id}', 'show')->name('reports.show');
         Route::delete('destroy/{id}', 'destroy')->name('reports.destroy');
     });
+
 
 
     Route::get('/profile', [App\Http\Controllers\AuthController::class, 'profile'])->name('profile');
