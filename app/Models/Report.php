@@ -10,7 +10,14 @@ class Report extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title',
+        'name',
+        'type',
+        'description',
+        'serial_number',
+        'specifications',
+        'quantity',
+        'price_per_item',
+        'status',
         'report_type',
         'parameters',
         'data',
@@ -64,5 +71,21 @@ class Report extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'generated_by');
+    }
+
+    /**
+     * Get the inventory issues related to this report.
+     */
+    public function inventoryIssues()
+    {
+        return $this->belongsToMany(InventoryIssue::class, 'report_inventory_issues');
+    }
+
+    /**
+     * Get the suppliers related to this report.
+     */
+    public function suppliers()
+    {
+        return $this->belongsToMany(Supplier::class, 'report_suppliers');
     }
 }

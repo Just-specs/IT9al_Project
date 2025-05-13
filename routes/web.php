@@ -14,6 +14,7 @@ use App\Http\Controllers\StockController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\PurchaseOrderReceivingController;
 use App\Http\Controllers\ReportViewController;
+use App\Http\Controllers\ReportController;
 
 
 Route::get('/', function () {
@@ -120,10 +121,15 @@ Route::middleware('auth')->group(function () {
 
     // Reports Routes
 
-    Route::get('/reports/view', [ReportViewController::class, 'index'])->name('reports.view.index');
-    Route::get('/reports/view/{id}', [ReportViewController::class, 'show'])->name('reports.view.show');
-
-
+    Route::prefix('reports')->group(function () {
+        Route::get('/', [ReportController::class, 'index'])->name('reports.index');
+        Route::get('/create', [ReportController::class, 'create'])->name('reports.create');
+        Route::post('/', [ReportController::class, 'store'])->name('reports.store');
+        Route::get('/{report}', [ReportController::class, 'show'])->name('reports.show');
+        Route::get('/{report}/edit', [ReportController::class, 'edit'])->name('reports.edit');
+        Route::put('/{report}', [ReportController::class, 'update'])->name('reports.update');
+        Route::delete('/{report}', [ReportController::class, 'destroy'])->name('reports.destroy');
+    });
 
     Route::get('/profile', [App\Http\Controllers\AuthController::class, 'profile'])->name('profile');
 });

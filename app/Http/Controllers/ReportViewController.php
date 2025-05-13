@@ -2,44 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
-use App\Models\InventoryIssue;
+use App\Models\Report;
 use Illuminate\Http\Request;
 
 class ReportViewController extends Controller
 {
     /**
-     * Display a listing of approved reports with their assignments.
+     * Display a listing of the reports.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        // Get products that have been issued (have assignment records)
-        $reports = Product::with(['inventoryIssues' => function ($query) {
-            $query->where('status', 'approved');
-        }, 'inventoryIssues.department', 'inventoryIssues.employee'])
-            ->whereHas('inventoryIssues', function ($query) {
-                $query->where('status', 'approved');
-            })
-            ->get();
-
+        $reports = Report::with(['inventoryIssues.department', 'inventoryIssues.employee'])->get();
         return view('reports.view', compact('reports'));
     }
 
     /**
-     * Display the specified report and its approved assignments.
+     * Display the specified report.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $report = Product::with(['inventoryIssues' => function ($query) {
-            $query->where('status', 'approved');
-        }, 'inventoryIssues.department', 'inventoryIssues.employee'])
-            ->findOrFail($id);
-
+        $report = Report::with(['inventoryIssues.department', 'inventoryIssues.employee', 'suppliers'])->findOrFail($id);
         return view('reports.show', compact('report'));
     }
 }

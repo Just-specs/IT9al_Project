@@ -62,7 +62,7 @@
 
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('reports.view.index') }}">
+        <a class="nav-link" href="{{ route('reports.index') }}">
             <i class="fas fa-file-alt"></i>
             <span>Reports</span></a>
 

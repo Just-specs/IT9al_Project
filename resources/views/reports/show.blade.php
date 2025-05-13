@@ -6,119 +6,111 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2>{{ $report->title }}</h2>
                     <div>
-                        <h2>Report Details</h2>
-                        <p class="text-muted mb-0">Viewing approved assignments for this report</p>
+                        <a href="{{ route('reports.edit', $report->id) }}" class="btn btn-warning">
+                            <i class="fas fa-edit"></i> Edit Report
+                        </a>
+                        <a href="{{ route('reports.index') }}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Reports
+                        </a>
                     </div>
-                    <a href="{{ route('reports.view.index') }}" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left"></i> Back to Reports
-                    </a>
                 </div>
 
                 <div class="card-body">
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <h3>Report Information</h3>
-                            <table class="table table-bordered">
-                                <tr>
-                                    <th width="30%">Name</th>
-                                    <td>{{ $report->name }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Type</th>
-                                    <td>{{ $report->type }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Description</th>
-                                    <td>{{ $report->description }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Serial Number</th>
-                                    <td>{{ $report->serial_number }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Specifications</th>
-                                    <td>{{ $report->specifications }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Current Stock</th>
-                                    <td>{{ $report->quantity }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Price Per Item</th>
-                                    <td>{{ number_format($report->price_per_item, 2) }}</td>
-                                </tr>
-                                <tr>
-                                    <th>Status</th>
-                                    <td>{{ $report->status }}</td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div class="col-md-6">
-                            <h3>Suppliers</h3>
-                            @if($report->suppliers->count() > 0)
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Contact</th>
-                                        <th>Email</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($report->suppliers as $supplier)
-                                    <tr>
-                                        <td>{{ $supplier->name }}</td>
-                                        <td>{{ $supplier->contact_number }}</td>
-                                        <td>{{ $supplier->email }}</td>
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                            @else
-                            <p class="text-muted">No suppliers associated with this report.</p>
-                            @endif
-                        </div>
+                    @if(session('success'))
+                    <div class="alert alert-success" role="alert">
+                        {{ session('success') }}
                     </div>
+                    @endif
 
-                    <h3>Approved Assignments</h3>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Department</th>
-                                    <th>Employee</th>
-                                    <th>Quantity Issued</th>
-                                    <th>Issue Date</th>
-                                    <th>Reason</th>
-                                    <th>Notes</th>
-                                    <th>Issued By</th>
-                                </tr>
-                            </thead>
+                    @if(session('info'))
+                    <div class="alert alert-info" role="alert">
+                        {{ session('info') }}
+                    </div>
+                    @endif
+
+                    <div class="mb-4">
+                        <h4>Report Details</h4>
+                        <table class="table table-bordered">
                             <tbody>
-                                @forelse($report->inventoryIssues as $issue)
                                 <tr>
-                                    <td>{{ $issue->department->name ?? 'N/A' }}</td>
-                                    <td>{{ $issue->employee->name ?? 'N/A' }}</td>
-                                    <td>{{ $issue->quantity_issued }}</td>
-                                    <td>{{ $issue->issue_date->format('M d, Y') }}</td>
-                                    <td>{{ $issue->reason }}</td>
-                                    <td>{{ $issue->notes }}</td>
-                                    <td>{{ $issue->issued_by }}</td>
+                                    <th width="20%">Report Type</th>
+                                    <td><span class="badge bg-info">{{ ucfirst($report->report_type) }}</span></td>
                                 </tr>
-                                @empty
                                 <tr>
-                                    <td colspan="7" class="text-center">No approved assignments found for this report.</td>
+                                    <th>Generated By</th>
+                                    <td>{{ $report->user ? $report->user->name : 'Unknown' }}</td>
                                 </tr>
-                                @endforelse
+                                <tr>
+                                    <th>Report Date</th>
+                                    <td>{{ $report->report_date->format('F d, Y') }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Date Range</th>
+                                    <td>{{ $report->start_date->format('F d, Y') }} - {{ $report->end_date->format('F d, Y') }}</td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
-                </div>
 
-                <div class="card-footer">
-                    <div class="text-muted">
-                        <small>This is a view-only page. No editing or creation of assignments is allowed here.</small>
+                    <div class="mb-4">
+                        <h4>Parameters</h4>
+                        <table class="table table-bordered">
+                            <tbody>
+                                @if(isset($report->parameters) && count($report->parameters) > 0)
+                                @foreach($report->parameters as $key => $value)
+                                @if(!empty($value))
+                                <tr>
+                                    <th width="20%">{{ ucwords(str_replace('_', ' ', $key)) }}</th>
+                                    <td>{{ is_bool($value) ? ($value ? 'Yes' : 'No') : $value }}</td>
+                                </tr>
+                                @endif
+                                @endforeach
+                                @else
+                                <tr>
+                                    <td colspan="2">No specific parameters</td>
+                                </tr>
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="mb-4">
+                        <h4>Report Summary</h4>
+                        @if(isset($report->data['summary']))
+                        <table class="table table-bordered">
+                            <tbody>
+                                @foreach($report->data['summary'] as $key => $value)
+                                @if(!is_array($value))
+                                <tr>
+                                    <th width="20%">{{ ucwords(str_replace('_', ' ', $key)) }}</th>
+                                    <td>{{ $value }}</td>
+                                </tr>
+                                @endif
+                                @endforeach
+                            </tbody>
+                        </table>
+                        @else
+                        <p>No summary data available</p>
+                        @endif
+                    </div>
+
+                    <div>
+                        <h4>Report Data</h4>
+                        @if($report->report_type == 'inventory')
+                        @include('reports.partials.inventory_data')
+                        @elseif($report->report_type == 'purchase_order')
+                        @include('reports.partials.purchase_order_data')
+                        @elseif($report->report_type == 'issue')
+                        @include('reports.partials.issue_data')
+                        @elseif($report->report_type == 'supplier')
+                        @include('reports.partials.supplier_data')
+                        @elseif($report->report_type == 'department')
+                        @include('reports.partials.department_data')
+                        @else
+                        <p>No detailed data available for this report type</p>
+                        @endif
                     </div>
                 </div>
             </div>

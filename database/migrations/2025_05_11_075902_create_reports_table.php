@@ -13,7 +13,14 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->string('name');
+            $table->string('type');
+            $table->string('serial_number')->nullable();
+            $table->text('description')->nullable();
+            $table->text('specifications')->nullable();
+            $table->integer('quantity')->default(0);
+            $table->decimal('price_per_item', 10, 2)->default(0);
+            $table->enum('status', ['available', 'assigned', 'maintenance', 'retired'])->default('available');
             $table->enum('report_type', ['inventory', 'purchase_order', 'issue', 'supplier', 'department']);
             $table->json('parameters')->nullable(); // Store report parameters
             $table->json('data')->nullable(); // Store generated report data
