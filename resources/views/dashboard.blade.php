@@ -92,17 +92,6 @@
 </div>
 
 <div class="row">
-    <!-- Low Stock Items Chart -->
-    <div class="col-lg-6 mb-4">
-        <div class="card shadow mb-4">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Item Status Distribution</h6>
-            </div>
-            <div class="card-body">
-                <div id="itemStatusChart" style="height: 300px;"></div>
-            </div>
-        </div>
-    </div>
 
     <!-- Recent Activities -->
     <div class="col-lg-6 mb-4">
@@ -190,9 +179,11 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Item Status Distribution Chart
     document.addEventListener('DOMContentLoaded', function() {
-        const statusData = @json($itemsByStatus);
+        const statusData = {
+            !!json_encode($itemsByStatus) !!
+        };
+        console.log(statusData);
 
         const labels = statusData.map(item => item.status.charAt(0).toUpperCase() + item.status.slice(1));
         const data = statusData.map(item => item.total);
@@ -217,21 +208,22 @@
             },
             options: {
                 maintainAspectRatio: false,
-                tooltips: {
-                    backgroundColor: "rgb(255,255,255)",
-                    bodyFontColor: "#858796",
-                    borderColor: '#dddfeb',
-                    borderWidth: 1,
-                    xPadding: 15,
-                    yPadding: 15,
-                    displayColors: false,
-                    caretPadding: 10,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'bottom'
+                    },
+                    tooltip: {
+                        backgroundColor: "rgb(255,255,255)",
+                        bodyColor: "#858796",
+                        borderColor: '#dddfeb',
+                        borderWidth: 1,
+                        padding: 15,
+                        displayColors: false,
+                        caretPadding: 10
+                    }
                 },
-                legend: {
-                    display: true,
-                    position: 'bottom'
-                },
-                cutoutPercentage: 80,
+                cutout: '80%',
             },
         });
     });

@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\PurchaseOrder;
+use App\Models\Report;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -23,5 +25,14 @@ class DatabaseSeeder extends Seeder
                 'role' => 'admin',
             ]);
         }
+
+        // Call the other seeders
+        $this->call([
+            SupplierSeeder::class,
+            ProductSeeder::class,
+            EmployeeSeeder::class,
+            DepartmentSeeder::class,
+
+        ]);
     }
 }
