@@ -62,23 +62,23 @@
 
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('inventory') }}">
-            <i class="fas fa-chart-line"></i>
+        <a class="nav-link" href="{{ route('reports.view.index') }}">
+            <i class="fas fa-file-alt"></i>
             <span>Reports</span></a>
-    </li>
-    @endif
 
-    <!-- Divider -->
-    <hr class="sidebar-divider d-none d-md-block">
+        @endif
 
-    <!-- Sidebar Toggler (Sidebar) -->
-    <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-    </div>
+        <!-- Divider -->
+        <hr class="sidebar-divider d-none d-md-block">
 
-    <!-- Logo -->
-    <div class="text-center mt-5">
-        <img src="{{ asset('image/logo.png') }}" alt="Logo" class="img-fluid" style="max-width: 80%;">
-    </div>
+        <!-- Sidebar Toggler (Sidebar) -->
+        <div class="text-center d-none d-md-inline">
+            <button class="rounded-circle border-0" id="sidebarToggle"></button>
+        </div>
+
+        <!-- Logo -->
+        <div class="text-center mt-5">
+            <img src="{{ asset('image/logo.png') }}" alt="Logo" class="img-fluid" style="max-width: 80%;">
+        </div>
 
 </ul>

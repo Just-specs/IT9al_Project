@@ -13,7 +13,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\PurchaseOrderReceivingController;
-use App\Http\Controllers\InventoryReportController;
+use App\Http\Controllers\ReportViewController;
 
 
 Route::get('/', function () {
@@ -120,6 +120,8 @@ Route::middleware('auth')->group(function () {
 
     // Reports Routes
 
+    Route::get('/reports/view', [ReportViewController::class, 'index'])->name('reports.view.index');
+    Route::get('/reports/view/{id}', [ReportViewController::class, 'show'])->name('reports.view.show');
 
 
 
