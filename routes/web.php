@@ -8,12 +8,12 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\InventoryIssueController;
-use App\Http\Controllers\ReportController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\PurchaseOrderReceivingController;
+use App\Http\Controllers\InventoryReportController;
 
 
 Route::get('/', function () {
@@ -119,13 +119,7 @@ Route::middleware('auth')->group(function () {
 
 
     // Reports Routes
-    Route::controller(ReportController::class)->prefix('reports')->group(function () {
-        Route::get('', 'index')->name('reports');  // Using 'reports' as route name
-        Route::get('create', 'create')->name('reports.create');
-        Route::post('store', 'store')->name('reports.store');
-        Route::get('show/{id}', 'show')->name('reports.show');
-        Route::delete('destroy/{id}', 'destroy')->name('reports.destroy');
-    });
+
 
 
 
